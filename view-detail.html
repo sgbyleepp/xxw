@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>学信档案</title>
+    <link rel="icon" href="https://t1.chei.com.cn/archive/favicon.ico" type="image/x-icon">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #fff; font-size: 15px; }
+        
+        /* 响应式容器 */
+        .app-container { width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; background: #fff; }
+        @media (min-width: 481px) {
+            body { background: #e8e8e8; }
+            .app-container { box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        }
+        
+        /* 顶部导航 */
+        .nav-bar { background: #fff; border-bottom: 1px solid #ebedf0; position: sticky; top: 0; z-index: 100; }
+        .nav-inner { display: flex; align-items: center; justify-content: center; height: 46px; position: relative; }
+        .nav-back { position: absolute; left: 0; padding: 0 16px; height: 100%; display: flex; align-items: center; cursor: pointer; }
+        .nav-back svg { width: 24px; height: 24px; color: #323233; }
+        .nav-title { font-size: 18px; font-weight: 500; color: #323233; }
+        
+        /* 内容区 */
+        .content { padding: 16px; background: #fff; min-height: calc(100vh - 46px); }
+        
+        /* 横幅 */
+        .vote-part { margin-bottom: 16px; }
+        
+        /* 头部卡片 */
+        .top-card { border-radius: 7px; padding: 20px; color: #fff; margin-bottom: 24px; box-shadow: 0px 4px 4px 3px rgba(98,191,207,0.2); }
+        .top-card.xj { background: linear-gradient(180deg, rgb(31,174,127) 0%, rgb(61,203,145) 100%); }
+        .top-card.xl { background: linear-gradient(180deg, rgb(55,134,243) 0%, rgb(91,167,248) 100%); }
+        .top-card.xw { background: linear-gradient(180deg, rgb(56,80,218) 0%, rgb(86,126,231) 100%); }
+        .top-card.ky { background: linear-gradient(180deg, rgb(54,177,197) 0%, rgb(93,200,218) 100%); }
+        
+        /* 卡片布局 */
+        .card-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+        .photo-group { display: flex; gap: 12px; }
+        .photo-box { text-align: center; }
+        .img-div { width: 55px; height: 73px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 4px; position: relative; }
+        .img-div.gray { background: #d1d5db; }
+        .img-div img { width: 100%; height: 100%; object-fit: cover; }
+        .img-div svg { width: 24px; height: 24px; color: rgba(255,255,255,0.6); }
+        .img-div .badge { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .img-div .badge span { color: #fff; font-size: 12px; font-weight: bold; }
+        .photo-text { font-size: 12px; opacity: 0.9; }
+        
+        .info-area { flex: 1; }
+        .info-area h2 { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+        .user-meta { font-size: 14px; }
+        
+        /* 学校信息 */
+        .school-info { margin-top: 8px; }
+        .school-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+        .school-name { font-size: 1.2rem; }
+        .degree-tag { background: rgba(0,0,0,0.2); backdrop-filter: blur(4px); padding: 2px 8px; border-radius: 12px; font-size: 14px; }
+        .major-row { display: flex; align-items: center; gap: 16px; font-size: 14px; }
+        .divider { height: 1rem; border-left: 1px solid rgba(255,255,255,0.6); }
+        
+        /* 详情列表 */
+        .detail-list { margin-top: 0; }
+        .detail-item { display: flex; align-items: center; gap: 16px; padding: 6px 0; font-size: 15px; }
+        .detail-label { width: 128px; text-align: right; color: #999998; flex-shrink: 0; }
+        .detail-value { flex: 1; color: #343333; }
+        
+        /* 分组标题 */
+        .section-title { font-size: 18px; font-weight: 600; color: #333; margin: 24px 0 16px; }
+        
+        /* 底部说明 */
+        .bottom-note { margin-top: 24px; padding: 16px; background: #f5f5f5; border-radius: 8px; font-size: 14px; color: #666; }
+        .bottom-note .label { font-weight: 500; }
+        
+        /* 底部按钮 */
+        .bottom-btn { margin-top: 24px; }
+        .my-btn { width: 100%; height: 53px; background: rgb(38,184,135); color: #fff; border: none; border-radius: 2px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="nav-bar">
+        <div class="nav-inner">
+            <a class="nav-back" onclick="goBack()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            </a>
+            <span class="nav-title" id="pageTitle">详情</span>
+        </div>
+    </div>
+    <div class="content" id="content">
+        <div style="text-align:center;padding:40px;color:#999;">加载中...</div>
+    </div>
+</div>
+
+<script src="js/api-helper.js"></script>
+<script>
+    const API_BASE = window.location.origin + '/api';
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type') || 'student_status';
+    const id = params.get('id');
+    let currentItem = null;
+    
+    // 辅助函数：带签名的 API 请求
+    async function apiCall(endpoint, data = {}) {
+        return apiRequest(`${API_BASE}${endpoint}`, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+    
+    const TYPE_CONFIG = {
+        student_status: { title: '高等学籍', cls: 'xj' },
+        education: { title: '高等学历', cls: 'xl' },
+        degree: { title: '学位', cls: 'xw' },
+        exam: { title: '考研信息', cls: 'ky' }
+    };
+    
+    const DEFAULT_VALUES = {
+        student_status: {
+            name: '刘亦菲', school: '广州大学', major: '汉语言文学', study_type: '普通全日制',
+            degree_level: '本科', personal_info: '女    2005年09月17日', nationality: '汉族',
+            id_number: '110101200212090000', duration: '4', education_type: '普通高等教育',
+            department: '经济管理学院', branch: '经济系', class_name: '20234102',
+            student_id: '2023320413', enrollment_date: '2023年09月01日', status: '在籍（注册学籍）',
+            graduation_date: '2027年06月30日'
+        },
+        education: {
+            name: '刘亦菲', school: '新学校', major: '新专业', study_type: '普通全日制',
+            degree_level: '本科', personal_info: '女    2005年09月17日',
+            enrollment_date: '2023年09月01日', graduation_date: '2027年06月30日',
+            education_type: '普通高等教育', duration: '4', graduation_status: '毕业',
+            principal_name: '李路明', certificate_number: '123456789012345678'
+        },
+        degree: {
+            name: '刘亦菲', school: '新学校', major: '新专业', degree_type: '学士',
+            degree_level: '本科', personal_info: '女    2005年09月17日',
+            degree_date: '2027年06月30日', certificate_number: '1000256789012345678'
+        },
+        exam: {
+            name: '刘亦菲', school: '新学校', major: '管理科学与工程', year: '2025',
+            exam_location: '1101', exam_number: '110148372', exam_unit: '清华大学',
+            exam_department: '管理科学与工程系', research_direction: '信息系统',
+            exam_method: '全国统考', special_plan: '无',
+            politics_name: '思想政治理论', foreign_name: '英语一',
+            course1_name: '数学三', course2_name: '金融学综合',
+            politics_score: '78', foreign_score: '80', course1_score: '137', course2_score: '139',
+            total_score: '434', admission_unit: '清华大学', admission_major: '管理科学与工程'
+        }
+    };
+    
+    document.getElementById('pageTitle').textContent = TYPE_CONFIG[type]?.title || '详情';
+    function goBack() { window.history.back(); }
+    
+ async function loadDetail() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user.id) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // 直接从服务器获取数据
+    const res = await apiCall('/get-user-data', { userId: user.id }).then(r => r.json());
+    // 关键修改：将 id 转为字符串再比较
+    currentItem = res[type]?.find(i => String(i.id) === String(id));
+    
+    if (!currentItem) {
+        document.getElementById('content').innerHTML = '<p style="text-align:center;padding:40px;color:#999;">未找到数据</p>';
+        return;
+    }
+    
+    // 设置个人信息的格式化字符串（如果需要）
+    if (currentItem.gender && currentItem.birthday) {
+        currentItem.personal_info = currentItem.gender + '    ' + currentItem.birthday;
+    }
+    
+    renderDetail();
+}
+   
+    
+  function getVal(field) {
+    if (currentItem && currentItem[field] !== undefined) {
+        return currentItem[field];
+    }
+    const defaults = DEFAULT_VALUES[type];
+    return defaults?.[field] || '';
+}
+    function renderDetail() {
+        const cfg = TYPE_CONFIG[type];
+        let html = '<div class="vote-part"><img src="img/zymyd_bg.png" alt="" style="width:100%;display:block;"></div>';
+        
+        html += '<div class="top-card ' + cfg.cls + '">';
+        html += '<div class="card-row">';
+        
+        if (type === 'student_status') {
+    // 学籍有两个照片框
+    const admissionPhoto = getVal('admissionPhoto') || getVal('photo');
+    const educationPhoto = getVal('educationPhoto') || getVal('photo2');
+    
+    html += '<div class="photo-group">';
+    
+    // 录取照片
+    html += '<div class="photo-box"><div class="img-div">';
+    if (admissionPhoto && !admissionPhoto.includes('data:image/svg+xml')) {
+        html += '<img src="' + admissionPhoto + '" alt="录取照片">';
+    } else {
+        html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>';
+    }
+    html += '</div><span class="photo-text">录取照片</span></div>';
+    
+    // 学历照片
+    html += '<div class="photo-box"><div class="img-div gray">';
+    if (educationPhoto && !educationPhoto.includes('data:image/svg+xml')) {
+        html += '<img src="' + educationPhoto + '" alt="学历照片">';
+    } else {
+        html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>';
+    }
+    html += '</div><span class="photo-text">学历照片</span></div>';
+    
+    html += '</div>';
+} else {
+            // 其他类型只有一个照片框
+            const photo = getVal('photo');
+            html += '<div class="photo-box"><div class="img-div">';
+            if (photo) {
+                html += '<img src="' + photo + '" alt="照片">';
+            } else {
+                html += '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>';
+            }
+            html += '</div></div>';
+        }
+        
+        html += '<div class="info-area">';
+        html += '<h2>' + getVal('name') + '</h2>';
+        const pinfo = getVal('personal_info').replace(/\s{2,}/g, m => '&nbsp;'.repeat(m.length));
+        html += '<div class="user-meta">' + pinfo + '</div>';
+        html += '</div></div>';
+        
+        html += '<div class="school-info">';
+        if (type === 'exam') {
+            html += '<div class="school-name" style="font-size:1.3rem;margin-bottom:12px;">' + getVal('school') + '</div>';
+            html += '<div style="font-size:14px;">' + getVal('year') + '</div>';
+        } else {
+            html += '<div class="school-row">';
+            html += '<h3 class="school-name">' + getVal('school') + '</h3>';
+            if (type === 'degree') {
+                html += '<div class="degree-tag">' + getVal('degree_type') + '</div>';
+            } else {
+                html += '<div class="degree-tag">' + getVal('degree_level') + '</div>';
+            }
+            html += '</div>';
+            html += '<div class="major-row">';
+            html += '<span>' + getVal('major') + '</span>';
+            if (type !== 'degree') {
+                html += '<span class="divider"></span>';
+                html += '<span>' + getVal('study_type') + '</span>';
+            }
+            html += '</div>';
+        }
+        html += '</div></div>';
+        
+        html += '<div class="detail-list">' + renderDetailItems() + '</div>';
+        
+        if (type === 'exam') {
+            html += '<div class="bottom-note"><span class="label">说明：</span>系统提供2006年以来入学的硕士研究生报名和成绩数据。</div>';
+        } else {
+              html += '<div class="bottom-btn">';
+              html += '<a href="view-report.html" style="display: block; text-decoration: none;">';
+              html += '<button class="my-btn">查看验证报告</button>';
+              html += '</a>';
+              html += '</div>';
+        }
+        
+        document.getElementById('content').innerHTML = html;
+    }
+    
+    function renderDetailItems() {
+        let html = '';
+        const item = (label, field) => {
+            const val = getVal(field);
+            if (field === 'duration' && val) {
+                return '<div class="detail-item"><span class="detail-label">' + label + '</span><span class="detail-value">' + val + ' 年</span></div>';
+            }
+            return '<div class="detail-item"><span class="detail-label">' + label + '</span><span class="detail-value">' + (val || '') + '</span></div>';
+        };
+        
+        if (type === 'student_status') {
+            html += item('民族', 'nationality'); html += item('证件号码', 'id_number');
+            html += item('学制', 'duration'); html += item('学历类别', 'education_type');
+            html += item('分院', 'branch'); html += item('系所', 'department');
+            html += item('班级', 'class_name'); html += item('学号', 'student_id');
+            html += item('入学日期', 'enrollment_date'); html += item('学籍状态', 'status');
+            html += item('预计毕业日期', 'graduation_date');
+        } else if (type === 'education') {
+            html += item('入学日期', 'enrollment_date'); html += item('毕（结）业日期', 'graduation_date');
+            html += item('学历类别', 'education_type'); html += item('学制', 'duration');
+            html += item('毕（结）业', 'graduation_status'); html += item('校（院）长姓名', 'principal_name');
+            html += item('证书编号', 'certificate_number');
+        } else if (type === 'degree') {
+            html += item('获学位日期', 'degree_date');
+            html += item('学科/专业', 'major');
+            html += item('学位证书编号', 'certificate_number');
+        } else if (type === 'exam') {
+            html += item('报考点', 'exam_location'); html += item('报名号', 'exam_number');
+            html += item('报考单位', 'exam_unit'); html += item('报考院系所', 'exam_department');
+            html += item('报考专业', 'major'); html += item('研究方向', 'research_direction');
+            html += item('考试方式', 'exam_method'); html += item('专项计划', 'special_plan');
+            html += item('政治理论名称', 'politics_name'); html += item('外国语名称', 'foreign_name');
+            html += item('业务课一名称', 'course1_name'); html += item('业务课二名称', 'course2_name');
+            html += '</div><h2 class="section-title">成绩信息</h2><div class="detail-list">';
+            html += item('政治理论', 'politics_score'); html += item('外国语', 'foreign_score');
+            html += item('业务课一', 'course1_score'); html += item('业务课二', 'course2_score');
+            html += item('总分', 'total_score');
+            html += '</div><h2 class="section-title">录取信息</h2><div class="detail-list">';
+            html += item('录取单位', 'admission_unit'); html += item('录取专业', 'admission_major');
+        }
+        return html;
+    }
+    
+    loadDetail();
+</script>
+</body>
+</html>
+

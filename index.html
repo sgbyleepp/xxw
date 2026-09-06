@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>学信档案</title>
+    <link rel="icon" href="https://t1.chei.com.cn/archive/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f5f5f5; font-size: 15px; }
+        
+        /* 响应式容器 - 手机端全宽，电脑端居中限宽 */
+        .app-container { width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; background: #f5f5f5; position: relative; }
+        @media (min-width: 481px) {
+            body { background: #e8e8e8; }
+            .app-container { box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        }
+        
+        /* 顶部导航 */
+        .nav-bar { background: #25b887; color: #fff; height: 46px; display: flex; align-items: center; justify-content: center; position: sticky; top: 0; z-index: 100; }
+        .nav-bar .back { position: absolute; left: 8px; padding: 8px; cursor: pointer; }
+        .nav-bar .back svg { width: 24px; height: 24px; }
+        .nav-bar .title { font-size: 16px; font-weight: 500; }
+        .nav-bar .logout { position: absolute; right: 12px; font-size: 14px; cursor: pointer; }
+        
+        /* 顶部广告横幅 */
+        .vote-part { padding: 12px 16px 0; }
+        .vote-banner { display: block; width: 100%; border-radius: 8px; overflow: hidden; }
+        .vote-banner img { width: 100%; height: auto; display: block; }
+        
+        /* 列表标题 */
+        .list-tit { display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 12px; font-size: 18px; }
+        .list-tit .l { color: #333; font-weight: 500; }
+        .list-tit .r { color: #999; font-size: 14px; }
+        .list-tit .r a { color: #25b887; text-decoration: none; margin-left: 4px; }
+        
+        /* 信息卡片 */
+        .list-card { margin: 0 16px 12px; border-radius: 7px; overflow: hidden; cursor: pointer; user-select: none; transition: transform 0.2s; box-shadow: 0px 4px 4px 3px rgba(98,191,207,0.2); }
+        .list-card:active { transform: scale(0.98); }
+        .list-card.pressing { transform: scale(0.96); box-shadow: 0 0 0 2px #25b887; }
+        
+        /* 学籍卡片 - 绿色 */
+        .list-card.xj { background: linear-gradient(135deg, #1fae7f 0%, #3dcb91 100%); }
+        /* 学历卡片 - 蓝色 */
+        .list-card.xl { background: linear-gradient(135deg, #3786f3 0%, #5ca8f7 100%); }
+        /* 学位卡片 - 蓝紫色 */
+        .list-card.xw { background: linear-gradient(to right bottom, rgb(56, 80, 218), rgb(86, 126, 231)); }
+        /* 考研卡片 - 青色 */
+        .list-card.ky { background: linear-gradient(to right bottom, rgb(54, 177, 197), rgb(93, 200, 218)); }
+        
+        .list-card a { display: block; padding: 16px; color: #fff; text-decoration: none; }
+        .yxmc-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .yxmc { font-size: 21px; font-weight: 500; flex: 1; }
+        .cc { background: rgba(0,0,0,0.15); padding: 4px 12px; border-radius: 12px; font-size: 14px; margin-left: 8px; }
+        .des { font-size: 16px; opacity: 0.95; }
+        .card-tip { font-size: 13px; opacity: 0.7; margin-top: 10px; }
+        
+        /* 空状态卡片 */
+        .no-data { background: #fff; margin: 0 16px 12px; border-radius: 8px; padding: 24px 16px; text-align: center; }
+        .no-data h4 { color: #333; font-size: 17px; font-weight: normal; line-height: 2; margin-bottom: 8px; padding: 0 12px; }
+        .no-data .des { color: #666; font-size: 14px; line-height: 1.6; }
+        .no-data .add-btn { display: inline-block; margin-top: 12px; color: #25b887; font-size: 15px; cursor: pointer; }
+        .help-icon { display: inline-block; width: 16px; height: 16px; vertical-align: -2px; margin-left: 0; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; }
+        .help-icon svg { width: 100%; height: 100%; stroke: #ccc; }
+        .colorGreen { color: #25b887; cursor: pointer; }
+        .arrow-down { display: inline-block; width: 8px; height: 8px; border-right: 1.5px solid #25b887; border-bottom: 1.5px solid #25b887; transform: rotate(45deg); margin-left: 2px; margin-bottom: 3px; }
+        .arrow-up { display: inline-block; width: 8px; height: 8px; border-right: 1.5px solid #25b887; border-bottom: 1.5px solid #25b887; transform: rotate(-135deg); margin-left: 2px; margin-top: 3px; }
+        
+        /* 提示信息折叠 */
+        .find-xjxl { background: #f9f9f9; margin-top: 16px; padding: 14px; border-radius: 6px; text-align: left; display: none; }
+        .find-xjxl.show { display: block; }
+        .find-list { display: flex; margin-bottom: 12px; font-size: 14px; color: #666; line-height: 1.8; }
+        .find-list:last-child { margin-bottom: 0; }
+        .find-list span { display: inline-flex; width: 20px; height: 20px; background: #25b887; color: #fff; border-radius: 50%; align-items: center; justify-content: center; font-size: 12px; margin-right: 10px; flex-shrink: 0; margin-top: 2px; }
+        .find-list div { flex: 1; }
+        .find-xjxl-bottom { text-align: center; margin-top: 16px; }
+        .find-xjxl-bottom span { color: #25b887; font-size: 15px; cursor: pointer; }
+        
+        /* 弹框 */
+        .modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-mask.show { display: flex; }
+        .modal-box { background: #fff; border-radius: 12px; width: 100%; max-width: 320px; overflow: hidden; animation: modalIn 0.2s; }
+        @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-header { padding: 20px 16px 12px; text-align: center; }
+        .modal-header h3 { font-size: 17px; color: #333; margin-bottom: 4px; }
+        .modal-header p { font-size: 14px; color: #999; }
+        .modal-body { padding: 8px 16px 16px; }
+        .modal-btn { display: flex; align-items: center; padding: 14px 16px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; font-size: 15px; }
+        .modal-btn:hover { background: #f9f9f9; }
+        .modal-btn.danger { border-color: #ffebee; color: #e53935; }
+        .modal-btn.danger:hover { background: #ffebee; }
+        .modal-btn svg { width: 20px; height: 20px; margin-right: 12px; }
+        .modal-footer { padding: 0 16px 16px; }
+        .modal-footer button { width: 100%; height: 44px; border: 1px solid #ddd; border-radius: 8px; background: #fff; font-size: 14px; color: #666; cursor: pointer; }
+        
+        /* 表单弹框 */
+        .form-modal .modal-box { max-width: 360px; max-height: 80vh; display: flex; flex-direction: column; }
+        .form-modal .modal-body { flex: 1; overflow-y: auto; padding: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; color: #666; margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; height: 40px; padding: 0 12px; border: 1px solid #dde5ed; border-radius: 6px; font-size: 14px; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #25b887; }
+        .form-footer { display: flex; gap: 12px; padding: 16px; border-top: 1px solid #eee; }
+        .form-footer button { flex: 1; height: 44px; border-radius: 8px; font-size: 14px; cursor: pointer; border: none; }
+        .form-footer .cancel { background: #f5f5f5; color: #666; }
+        .form-footer .submit { background: #25b887; color: #fff; }
+        
+        /* 登录页 */
+        .login-page { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(180deg, #25b887 0%, #1a9d74 100%); }
+        .login-box { background: #fff; border-radius: 12px; padding: 32px 24px; width: 100%; max-width: 340px; }
+        .login-logo { text-align: center; margin-bottom: 24px; }
+        .login-logo h1 { font-size: 22px; color: #25b887; }
+        .login-logo p { font-size: 13px; color: #999; margin-top: 4px; }
+        .login-form .form-group { margin-bottom: 16px; }
+        .login-form input { width: 100%; height: 44px; padding: 0 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; }
+        .login-form input:focus { outline: none; border-color: #25b887; }
+        .login-form .submit-btn { width: 100%; height: 44px; background: #25b887; color: #fff; border: none; border-radius: 8px; font-size: 15px; cursor: pointer; margin-top: 8px; }
+        .login-form .register-link { text-align: center; margin-top: 16px; font-size: 13px; color: #999; }
+        .login-form .register-link a { color: #25b887; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <!-- 登录页 -->
+    <div id="loginPage" class="login-page">
+        <div class="login-box">
+            <div class="login-logo">
+                <h1>学信档案</h1>
+                <p>高等教育信息管理系统</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <input type="text" id="loginUsername" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="submit-btn">登 录</button>
+                <div class="register-link">还没有账号？<a href="javascript:;" onclick="showRegisterModal()">立即注册</a></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 主页面 -->
+    <div id="mainPage" class="app-container" style="display:none;">
+        <div class="nav-bar">
+            <a class="back" onclick="backToSelect()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </a>
+            <span class="title">高等教育信息</span>
+            <span class="logout" onclick="logout()">退出</span>
+        </div>
+        <div id="app" class="content">
+            <div class="vote-part">
+                <a href="javascript:;" class="vote-banner">
+                    <div class="vote-banner-text">📢 欢迎使用学信档案系统</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作弹框 -->
+    <div id="actionModal" class="modal-mask">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>选择操作</h3>
+                <p id="actionDesc">请选择要进行的操作</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-btn" id="editBtn" onclick="openEditForm()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    <span>编辑信息</span>
+                </div>
+                <div class="modal-btn" id="addBtn" onclick="openAddForm()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    <span id="addBtnText">添加新信息</span>
+                </div>
+                <div class="modal-btn danger" id="deleteBtn" onclick="confirmDelete()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    <span>删除信息</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal('actionModal')">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 表单弹框 -->
+    <div id="formModal" class="modal-mask form-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="formTitle">添加信息</h3>
+            </div>
+            <div class="modal-body">
+                <form id="infoForm"></form>
+            </div>
+            <div class="form-footer">
+                <button type="button" class="cancel" onclick="closeModal('formModal')">取消</button>
+                <button type="submit" class="submit" form="infoForm">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除确认弹框 -->
+    <div id="deleteModal" class="modal-mask">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>确认删除</h3>
+                <p>删除后将无法恢复，确定要删除吗？</p>
+            </div>
+            <div class="form-footer">
+                <button type="button" class="cancel" onclick="closeModal('deleteModal')">取消</button>
+                <button type="button" class="submit" style="background:#e53935;" onclick="executeDelete()">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快速添加弹框 -->
+    <div id="quickAddModal" class="modal-mask">
+        <div class="modal-box" style="max-width:340px;border-radius:12px;">
+            <div class="modal-header" style="position:relative;padding:24px 24px 16px;">
+                <span style="position:absolute;right:16px;top:16px;font-size:24px;cursor:pointer;color:#999;line-height:1;" onclick="closeModal('quickAddModal')">&times;</span>
+                <h3 id="quickAddTitle" style="font-size:18px;font-weight:500;color:#333;">添加新学历信息</h3>
+                <p id="quickAddDesc" style="color:#666;font-size:13px;margin-top:8px;line-height:1.5;">请选择要添加的学历层次，系统将按照正确顺序插入记录</p>
+            </div>
+            <div class="modal-body" style="padding:8px 24px 16px;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label id="quickAddLabel" style="font-size:15px;color:#333;margin-bottom:10px;display:block;">学历层次</label>
+                    <select id="quickAddLevel" style="width:100%;height:44px;border:1px solid #e0e0e0;border-radius:22px;padding:0 16px;font-size:15px;color:#333;background:#fff;">
+                        <option value="博士研究生">博士研究生</option>
+                        <option value="硕士研究生">硕士研究生</option>
+                        <option value="本科" selected>本科</option>
+                        <option value="专科">专科</option>
+                    </select>
+                </div>
+            </div>
+            <div style="padding:16px 24px 24px;">
+                <button onclick="submitQuickAdd()" style="width:100%;height:44px;background:#25b887;color:#fff;border:none;border-radius:22px;font-size:15px;cursor:pointer;margin-bottom:12px;">确认添加</button>
+                <button onclick="closeModal('quickAddModal')" style="width:100%;height:44px;background:#fff;color:#333;border:1px solid #e0e0e0;border-radius:22px;font-size:15px;cursor:pointer;">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册弹框 -->
+    <div id="registerModal" class="modal-mask form-modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>用户注册</h3>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="form-group"><label>激活码 *</label><input type="text" id="regActivationCode" required placeholder="请输入激活码"></div>
+                    <div class="form-group"><label>手机号 *</label><input type="tel" id="regUsername" required placeholder="请输入手机号"></div>
+                    <div class="form-group"><label>密码 *</label><input type="password" id="regPassword" required></div>
+                </form>
+            </div>
+            <div class="form-footer">
+                <button type="button" class="cancel" onclick="closeModal('registerModal')">取消</button>
+                <button type="submit" class="submit" form="registerForm">注册</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 选择操作弹框 -->
+    <div id="selectModal" class="modal-mask">
+        <div class="modal-box" style="max-width:340px;">
+            <div class="modal-header" style="padding:24px 16px 16px;">
+                <h3 style="font-size:17px;text-align:center;">请选择操作</h3>
+            </div>
+            <div class="modal-body" style="padding:8px 16px 20px;">
+                <div class="modal-btn" onclick="goToEducationInfo()" style="display:flex;align-items:center;padding:16px;border:1px solid #eee;border-radius:10px;margin-bottom:12px;cursor:pointer;background:#f9fff9;">
+                    <div style="width:40px;height:40px;background:#25b887;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:14px;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:15px;font-weight:500;color:#333;">修改高等教育信息</div>
+                        <div style="font-size:12px;color:#999;margin-top:4px;">学籍/学历/学位/考研信息管理</div>
+                    </div>
+                </div>
+                <div class="modal-btn" onclick="goToEditReport()" style="display:flex;align-items:center;padding:16px;border:1px solid #eee;border-radius:10px;cursor:pointer;background:#f5f9ff;">
+                    <div style="width:40px;height:40px;background:#409eff;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-right:14px;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:15px;font-weight:500;color:#333;">编辑学籍在线验证报告</div>
+                        <div style="font-size:12px;color:#999;margin-top:4px;">生成学籍验证报告页面</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:0 16px 16px;">
+                <button onclick="logout()" style="width:100%;height:40px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:14px;color:#666;cursor:pointer;">退出登录</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api-helper.js"></script>
+    <script>
+
+        const API_BASE = window.location.origin + '/api';
+
+        let currentUser = null;
+        let educationData = { student_status: [], education: [], degree: [], exam: [] };
+        let currentSection = '', currentItemId = null, isEditing = false, pressTimer = null;
+
+        const SECTION_MAP = {
+            student_status: { name: '学籍', short: '学籍', cls: 'xj' },
+            education: { name: '学历', short: '学历', cls: 'xl' },
+            degree: { name: '学位', short: '学位', cls: 'xw' },
+            exam: { name: '考研', short: '考研', cls: 'ky' }
+        };
+
+        async function api(endpoint, data = {}) {
+            const res = await apiRequest(`${API_BASE}${endpoint}`, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            return res.json();
+        }
+
+        // 公开 API（用于登录、注册等不需要认证的接口）
+        async function publicApi(endpoint, data = {}) {
+            const res = await publicApiRequest(`${API_BASE}${endpoint}`, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            return res.json();
+        }
+
+        // 登录
+        document.getElementById('loginForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const res = await publicApi('/login', { username: document.getElementById('loginUsername').value, password: document.getElementById('loginPassword').value });
+            if (res.success) { 
+                currentUser = res.data; 
+                localStorage.setItem('user', JSON.stringify(currentUser)); 
+                // 保存会话令牌
+                if (res.session_token) {
+                    setSessionToken(res.session_token);
+                }
+                showMainPage(); 
+            }
+            else { alert(res.error || '登录失败'); }
+        };
+
+        // 注册
+        document.getElementById('registerForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const res = await publicApi('/register', { 
+                activation_code: document.getElementById('regActivationCode').value,
+                username: document.getElementById('regUsername').value, 
+                password: document.getElementById('regPassword').value
+            });
+            if (res.success) { 
+                // 保存用户信息和会话令牌
+                currentUser = res.data;
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                if (res.session_token) {
+                    setSessionToken(res.session_token);
+                }
+                closeModal('registerModal');
+                showMainPage();
+            }
+            else { alert(res.error || '注册失败'); }
+        };
+
+        function showRegisterModal() { document.getElementById('registerModal').classList.add('show'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+        function logout() { currentUser = null; localStorage.removeItem('user'); document.getElementById('mainPage').style.display = 'none'; document.getElementById('loginPage').style.display = 'flex'; document.getElementById('selectModal').classList.remove('show'); }
+
+        async function showMainPage() {
+            document.getElementById('loginPage').style.display = 'none';
+            // 显示选择弹框
+            document.getElementById('selectModal').classList.add('show');
+        }
+
+        function goToEducationInfo() {
+            closeModal('selectModal');
+            document.getElementById('mainPage').style.display = 'block';
+            loadData();
+        }
+
+        function goToEditReport() {
+            closeModal('selectModal');
+            location.href = 'edit-report.html';
+        }
+
+        function backToSelect() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('selectModal').classList.add('show');
+        }
+
+        async function loadData() {
+            const res = await api('/get-user-data', { userId: currentUser.id });
+            educationData = res;
+            render();
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="vote-part">
+                    <a href="javascript:;" class="vote-banner"><img src="img/kzxz_bg.png" alt=""></a>
+                </div>
+                ${renderSection('student_status', true)}
+                ${renderSection('education', true)}
+                ${renderSection('degree', true)}
+                ${renderSection('exam', false)}
+            `;
+            bindLongPress();
+        }
+
+        function renderSection(key, showBind) {
+            const items = educationData[key] || [];
+            const info = SECTION_MAP[key];
+            return `
+                <div class="list-tit">
+                    <div class="l">${info.name}信息 ${items.length > 0 ? '(' + items.length + ')' : ''}</div>
+                    ${showBind ? `<div class="r">还有${info.short}没有显示出来？<a href="javascript:;" onclick="openAddFormDirect('${key}')">尝试绑定</a></div>` : ''}
+                </div>
+                ${items.length > 0 ? items.map(item => renderCard(key, item, info.cls)).join('') : renderEmptyCard(key)}
+            `;
+        }
+
+        function renderCard(section, item, cls) {
+            let desContent = '';
+            let showTag = true;
+            if (section === 'degree') {
+                // 学位卡片只显示专业
+                desContent = item.major || '未填写专业';
+            } else if (section === 'exam') {
+                // 考研卡片只显示年份，无标签
+                desContent = item.year || '-';
+                showTag = false;
+            } else {
+                desContent = `${item.major || '未填写专业'}　|　${item.study_type || item.year || '-'}`;
+            }
+                 const isStudentStatus = section === 'student_status';
+    
+            // 设置跳转链接：学籍跳转到 edit_report_2.html，其他跳转到 detail.html
+                const href = isStudentStatus ? 'edit_report_2.html' : `detail.html?type=${section}&id=${item.id}`;
+    
+        return `
+        <div class="list-card ${cls}" data-section="${section}" data-id="${item.id}">
+            <a href="${href}" ${isStudentStatus ? 'target="_blank"' : ''}>
+                        <div class="yxmc-wrap">
+                            <div class="yxmc">${item.school || '未填写学校'}</div>
+                            ${showTag ? `<div class="cc">${item.degree_type || item.degree_level || '-'}</div>` : ''}
+                        </div>
+                        <div class="des">${desContent}</div>
+                    </a>
+                </div>
+            `;
+        }
+
+        function renderEmptyCard(section) {
+            if (section === 'degree') {
+                return `
+                    <div class="no-data empty-card" data-section="${section}">
+                        <h4>您还未绑定学位信息，可以使用“尝试绑定学位”功能绑定您的学位 <span class="help-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg></span></h4>
+                        <div class="find-xjxl" id="degreeTips">
+                            <div class="find-list"><span>1</span><div>本系统提供社会查询的学位证书数据来源于相关学位授予单位经所在省（自治区、直辖市）学位委员会办公室报国务院学位委员会办公室备案的学位授予数据。</div></div>
+                            <div class="find-list"><span>2</span><div>请确保注册账号的"姓名"及"证件号码"无误，且对应的学位信息属于本系统查询范围，若您未成功绑定学位信息，请与有关学位授予单位的学位管理部门联系核实。</div></div>
+                            <div class="find-list"><span>3</span><div>经核实后属学位授予信息漏报、错报的，由学位授予单位依照"学位授予信息补报、修改流程"更正相关内容。本网站无权修改任何数据。</div></div>
+                        </div>
+                        <div class="find-xjxl-bottom" onclick="toggleDegreeTips()"><span id="degreeTipsText" class="colorGreen">提示信息 <i class="arrow-down"></i></span></div>
+                    </div>
+                `;
+            }
+            const msgs = {
+                student_status: { title: '没有找到您的学籍信息', desc: '请确认您的姓名和证件号码是否正确', showHelp: false },
+                education: { title: '没有找到您的学历信息', desc: '', showHelp: true },
+                exam: { title: '您没有考研信息！', desc: '您目前没有考研信息，系统提供2006年以来入学的硕士研究生报名和成绩数据。', showHelp: false }
+            };
+            const m = msgs[section];
+            const helpIcon = m.showHelp ? ' <span class="help-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg></span>' : '';
+            return `
+                <div class="no-data empty-card" data-section="${section}">
+                    <h4>${m.title}${helpIcon}</h4>
+                    ${m.desc ? `<div class="des">${m.desc}</div>` : ''}
+                    ${section === 'education' ? '<div class="find-xjxl-bottom"><span class="colorGreen">查看解决办法 <i class="arrow-down"></i></span></div>' : ''}
+                </div>
+            `;
+        }
+
+        function toggleDegreeTips() {
+            const tips = document.getElementById('degreeTips');
+            const text = document.getElementById('degreeTipsText');
+            if (tips.classList.contains('show')) {
+                tips.classList.remove('show');
+                text.innerHTML = '提示信息 <i class="arrow-down"></i>';
+            } else {
+                tips.classList.add('show');
+                text.innerHTML = '收起 <i class="arrow-up"></i>';
+            }
+        }
+
+        function bindLongPress() {
+            document.querySelectorAll('.list-card').forEach(card => {
+                let isLongPress = false;
+                const start = (e) => { 
+                    isLongPress = false;
+                    card.classList.add('pressing'); 
+                    pressTimer = setTimeout(() => {
+                        isLongPress = true;
+                        openActionModal(card.dataset.section, card.dataset.id);
+                    }, 500); 
+                };
+                const end = (e) => { 
+                    card.classList.remove('pressing'); 
+                    clearTimeout(pressTimer);
+                };
+                const click = (e) => {
+                    if (isLongPress) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                };
+                card.addEventListener('mousedown', start);
+                card.addEventListener('touchstart', start, { passive: true });
+                card.addEventListener('mouseup', end);
+                card.addEventListener('mouseleave', end);
+                card.addEventListener('touchend', end);
+                card.addEventListener('touchcancel', end);
+                card.addEventListener('click', click);
+            });
+            // 空卡片长按添加
+            document.querySelectorAll('.empty-card').forEach(card => {
+                const section = card.dataset.section;
+                if (section === 'student_status') return; // 学籍不能添加
+                let timer = null;
+                const start = (e) => {
+                    card.style.opacity = '0.7';
+                    timer = setTimeout(() => {
+                        card.style.opacity = '1';
+                        openAddFormDirect(section);
+                    }, 500);
+                };
+                const end = () => {
+                    card.style.opacity = '1';
+                    if (timer) { clearTimeout(timer); timer = null; }
+                };
+                card.addEventListener('mousedown', start);
+                card.addEventListener('touchstart', start, { passive: true });
+                card.addEventListener('mouseup', end);
+                card.addEventListener('mouseleave', end);
+                card.addEventListener('touchend', end);
+                card.addEventListener('touchcancel', end);
+            });
+        }
+
+        function openQuickAddModal(section) {
+            currentSection = section;
+            const name = SECTION_MAP[section].name;
+            document.getElementById('quickAddTitle').textContent = `添加新${name}信息`;
+            
+            // 根据类型设置不同的标签和选项
+            let labelText = '学历层次';
+            let optionsHtml = '';
+            if (section === 'degree') {
+                labelText = '学位类型';
+                document.getElementById('quickAddDesc').textContent = `请选择要添加的学位类型，系统将按照正确顺序插入记录`;
+                optionsHtml = `
+                    <option value="博士">博士</option>
+                    <option value="硕士">硕士</option>
+                    <option value="学士" selected>学士</option>
+                `;
+            } else if (section === 'student_status') {
+                document.getElementById('quickAddDesc').textContent = `请选择要添加的学历层次，系统将按照正确顺序插入记录`;
+                optionsHtml = `
+                    <option value="博士研究生">博士研究生</option>
+                    <option value="硕士研究生">硕士研究生</option>
+                    <option value="本科" selected>本科</option>
+                    <option value="专科">专科</option>
+                `;
+            } else {
+                document.getElementById('quickAddDesc').textContent = `请选择要添加的${name}层次，系统将按照正确顺序插入记录`;
+                optionsHtml = `
+                    <option value="博士研究生">博士研究生</option>
+                    <option value="硕士研究生">硕士研究生</option>
+                    <option value="本科" selected>本科</option>
+                    <option value="专科">专科</option>
+                `;
+            }
+            document.getElementById('quickAddLabel').textContent = labelText;
+            document.getElementById('quickAddLevel').innerHTML = optionsHtml;
+            document.getElementById('quickAddModal').classList.add('show');
+        }
+
+        async function submitQuickAdd() {
+            const level = document.getElementById('quickAddLevel').value;
+            // 根据类型设置默认数据
+            let data = {};
+            if (currentSection === 'student_status') {
+                data = {
+                    school: '新学校', major: '新专业', study_type: '普通全日制',
+                    degree_level: level, status: '在籍（注册学籍）'
+                };
+            } else if (currentSection === 'education') {
+                data = {
+                    school: '清华大学', major: '汉语言文学', study_type: '普通全日制',
+                    degree_level: level, education_type: '普通高等教育', duration: '4',
+                    enrollment_date: '2020-09-01', graduation_date: '2024-07-01', graduation_status: '毕业'
+                };
+            } else if (currentSection === 'degree') {
+                data = {
+                    school: '新学校', major: '新专业',
+                    degree_type: level
+                };
+            } else if (currentSection === 'exam') {
+                data = {
+                    school: '清华大学', major: '汉语言文学', year: '2025', degree_level: level
+                };
+            }
+            const payload = { 
+                table: currentSection, 
+                action: 'insert', 
+                data: data, 
+                userId: currentUser.id 
+            };
+            const res = await api('/update-data', payload);
+            if (res.success) { 
+                closeModal('quickAddModal'); 
+                await loadData(); 
+            } else { 
+                alert(res.error || '添加失败'); 
+            }
+        }
+
+        function openActionModal(section, id) {
+            currentSection = section; currentItemId = id;
+            document.getElementById('actionDesc').textContent = `请选择要对该${SECTION_MAP[section].name}信息进行的操作`;
+            document.getElementById('addBtnText').textContent = `添加新${SECTION_MAP[section].name}信息`;
+            // 显示编辑按钮
+            document.getElementById('editBtn').style.display = 'flex';
+            
+            // 学籍信息：只有非默认记录才能删除
+            if (section === 'student_status') {
+                const item = educationData[section].find(item => item.id === id);
+                const isDefault = item && item.is_default;
+                document.getElementById('deleteBtn').style.display = isDefault ? 'none' : 'flex';
+            } else {
+                // 其他类型都可以删除
+                document.getElementById('deleteBtn').style.display = 'flex';
+            }
+            
+            document.getElementById('actionModal').classList.add('show');
+        }
+
+        function openAddFormDirect(section) { 
+            currentSection = section; 
+            currentItemId = null; 
+            isEditing = false; 
+            // 学籍直接弹出快速添加框
+            if (section === 'student_status') {
+                openQuickAddModal(section);
+                return;
+            }
+            // 显示只有添加按钮的操作弹框
+            document.getElementById('actionDesc').textContent = `请选择要对该${SECTION_MAP[section].name}信息进行的操作`;
+            document.getElementById('addBtnText').textContent = `添加新${SECTION_MAP[section].name}信息`;
+            document.getElementById('editBtn').style.display = 'none';
+            document.getElementById('deleteBtn').style.display = 'none';
+            document.getElementById('actionModal').classList.add('show');
+        }
+        function openAddForm() { 
+            closeModal('actionModal'); 
+            isEditing = false; 
+            currentItemId = null; 
+            // 考研信息直接添加当年数据
+            if (currentSection === 'exam') {
+                setTimeout(async () => {
+                    const currentYear = new Date().getFullYear().toString();
+                    const data = {
+                        school: '新学校', major: '新专业', year: currentYear
+                    };
+                    const payload = { table: 'exam', action: 'insert', data: data, userId: currentUser.id };
+                    const res = await api('/update-data', payload);
+                    if (res.success) { await loadData(); } else { alert(res.error || '添加失败'); }
+                }, 150);
+            } else {
+                setTimeout(() => openQuickAddModal(currentSection), 150); 
+            }
+        }
+        function openEditForm() { closeModal('actionModal'); isEditing = true; setTimeout(openFormModal, 150); }
+
+        function openFormModal() {
+            let title = (isEditing ? '编辑' : '添加') + SECTION_MAP[currentSection].name + '信息';
+            if (isEditing && currentSection === 'degree') {
+                title = '编辑教育信息';
+            }
+            if (isEditing && currentSection === 'exam') {
+                title = '编辑考研信息';
+            }
+            document.getElementById('formTitle').textContent = title;
+            document.getElementById('infoForm').innerHTML = generateFormFields();
+            document.getElementById('formModal').classList.add('show');
+        }
+
+        function generateFormFields() {
+            let item = isEditing && currentItemId ? educationData[currentSection].find(i => String(i.id) === String(currentItemId)) : null;
+            const v = (k) => item?.[k] || '';
+
+            // 编辑模式根据类型显示不同字段
+            if (isEditing) {
+                if (currentSection === 'degree') {
+                    // 学位编辑只显示学校名称和学位名称（专业）
+                    return `
+                        <div class="form-group"><label>学校名称</label><input type="text" name="school" value="${v('school')}" placeholder="请输入学校名称"></div>
+                        <div class="form-group"><label>学位名称</label><input type="text" name="major" value="${v('major')}" placeholder="请输入学位名称"></div>
+                    `;
+                }
+                if (currentSection === 'exam') {
+                    // 考研编辑只显示学校名称和年份
+                    return `
+                        <div class="form-group"><label>学校名称</label><input type="text" name="school" value="${v('school')}" placeholder="新学校"></div>
+                        <div class="form-group"><label>年份</label><input type="text" name="year" value="${v('year')}" placeholder="例如：2024"></div>
+                    `;
+                }
+                return `
+                    <div class="form-group"><label>学校名称 *</label><input type="text" name="school" required value="${v('school')}" placeholder="请输入学校名称"></div>
+                    <div class="form-group"><label>专业 *</label><input type="text" name="major" required value="${v('major')}" placeholder="请输入专业"></div>
+                    <div class="form-group"><label>学习形式</label><select name="study_type"><option value="">请选择</option><option value="全日制" ${v('study_type')==='全日制'?'selected':''}>全日制</option><option value="普通全日制" ${v('study_type')==='普通全日制'?'selected':''}>普通全日制</option><option value="非全日制" ${v('study_type')==='非全日制'?'selected':''}>非全日制</option><option value="业余" ${v('study_type')==='业余'?'selected':''}>业余</option><option value="函授" ${v('study_type')==='函授'?'selected':''}>函授</option></select></div>
+                    <div class="form-group"><label>学位层次</label><select name="degree_level"><option value="">请选择</option><option value="专科" ${v('degree_level')==='专科'?'selected':''}>专科</option><option value="本科" ${v('degree_level')==='本科'?'selected':''}>本科</option><option value="硕士研究生" ${v('degree_level')==='硕士研究生'?'selected':''}>硕士研究生</option><option value="博士研究生" ${v('degree_level')==='博士研究生'?'selected':''}>博士研究生</option></select></div>
+                `;
+            }
+
+            // 新增模式显示完整字段
+            const common = `
+                <div class="form-group"><label>姓名</label><input type="text" name="name" value="${v('name')}" placeholder="请输入姓名"></div>
+                <div class="form-group"><label>学校名称 *</label><input type="text" name="school" required value="${v('school')}" placeholder="请输入学校名称"></div>
+                <div class="form-group"><label>专业</label><input type="text" name="major" value="${v('major')}" placeholder="请输入专业"></div>`;
+            const level = `<div class="form-group"><label>层次</label><select name="degree_level"><option value="">请选择</option><option value="专科" ${v('degree_level')==='专科'?'selected':''}>专科</option><option value="本科" ${v('degree_level')==='本科'?'selected':''}>本科</option><option value="硕士研究生" ${v('degree_level')==='硕士研究生'?'selected':''}>硕士研究生</option><option value="博士研究生" ${v('degree_level')==='博士研究生'?'selected':''}>博士研究生</option></select></div>`;
+            const studyType = `<div class="form-group"><label>学习形式</label><select name="study_type"><option value="">请选择</option><option value="全日制" ${v('study_type')==='全日制'?'selected':''}>全日制</option><option value="普通全日制" ${v('study_type')==='普通全日制'?'selected':''}>普通全日制</option><option value="非全日制" ${v('study_type')==='非全日制'?'selected':''}>非全日制</option><option value="业余" ${v('study_type')==='业余'?'selected':''}>业余</option><option value="函授" ${v('study_type')==='函授'?'selected':''}>函授</option></select></div>`;
+
+            if (currentSection === 'student_status') return common + level + studyType + `<div class="form-group"><label>入学日期</label><input type="date" name="enrollment_date" value="${v('enrollment_date')}"></div><div class="form-group"><label>学籍状态</label><select name="status"><option value="在籍（注册学籍）">在籍（注册学籍）</option><option value="休学" ${v('status')==='休学'?'selected':''}>休学</option><option value="退学" ${v('status')==='退学'?'selected':''}>退学</option></select></div>`;
+            if (currentSection === 'education') return common + level + studyType + `<div class="form-group"><label>入学日期</label><input type="date" name="enrollment_date" value="${v('enrollment_date')}"></div><div class="form-group"><label>毕业日期</label><input type="date" name="graduation_date" value="${v('graduation_date')}"></div><div class="form-group"><label>学历类别</label><select name="education_type"><option value="普通高等教育">普通高等教育</option><option value="成人高等教育" ${v('education_type')==='成人高等教育'?'selected':''}>成人高等教育</option></select></div><div class="form-group"><label>学制（年）</label><input type="text" name="duration" value="${v('duration')}" placeholder="如：4"></div><div class="form-group"><label>毕业状态</label><select name="graduation_status"><option value="毕业">毕业</option><option value="结业" ${v('graduation_status')==='结业'?'selected':''}>结业</option></select></div><div class="form-group"><label>校长姓名</label><input type="text" name="principal_name" value="${v('principal_name')}"></div><div class="form-group"><label>证书编号</label><input type="text" name="certificate_number" value="${v('certificate_number')}"></div>`;
+            if (currentSection === 'degree') return common + `<div class="form-group"><label>学位类别</label><select name="degree_type"><option value="学士">学士</option><option value="硕士" ${v('degree_type')==='硕士'?'selected':''}>硕士</option><option value="博士" ${v('degree_type')==='博士'?'selected':''}>博士</option></select></div><div class="form-group"><label>授予日期</label><input type="date" name="degree_date" value="${v('degree_date')}"></div><div class="form-group"><label>证书编号</label><input type="text" name="certificate_number" value="${v('certificate_number')}"></div>`;
+            if (currentSection === 'exam') return common + `<div class="form-group"><label>报考年份 *</label><input type="text" name="year" required value="${v('year')}" placeholder="如：2025"></div><div class="form-group"><label>初试总分</label><input type="text" name="total_score" value="${v('total_score')}"></div><div class="form-group"><label>录取状态</label><select name="admission_status"><option value="">请选择</option><option value="已录取" ${v('admission_status')==='已录取'?'selected':''}>已录取</option><option value="待录取" ${v('admission_status')==='待录取'?'selected':''}>待录取</option><option value="未录取" ${v('admission_status')==='未录取'?'selected':''}>未录取</option></select></div>`;
+            return common;
+        }
+
+        document.getElementById('infoForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target).entries());
+            const payload = { table: currentSection, action: isEditing ? 'update' : 'insert', data, userId: currentUser.id };
+            if (isEditing) payload.id = currentItemId;
+            const res = await api('/update-data', payload);
+            if (res.success) { closeModal('formModal'); await loadData(); } else { alert(res.error || '操作失败'); }
+        };
+
+        function confirmDelete() { closeModal('actionModal'); setTimeout(() => document.getElementById('deleteModal').classList.add('show'), 150); }
+
+        async function executeDelete() {
+            const res = await api('/update-data', { table: currentSection, action: 'delete', id: currentItemId, userId: currentUser.id });
+            if (res.success) { closeModal('deleteModal'); await loadData(); } else { alert(res.error || '删除失败'); }
+        }
+
+        // 初始化
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) { currentUser = JSON.parse(savedUser); showMainPage(); }
+    </script>
+</body>
+
+</html>

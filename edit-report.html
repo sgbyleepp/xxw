@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height:100%;font-size:40px" data-dpr="1">
+<head>
+    <meta charset="utf-8">
+    <title>编辑学籍在线验证报告</title>
+    <meta name="keywords" content="学籍在线验证报告,学历在线验证报告,学位在线验证报告,学历证书电子注册备案表,学历验证,学籍验证,学位验证">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="img/image_3.ico" type="image/x-icon">
+    <style>
+@font-face{font-family:"rare-words-font";src:url(/static/fonts/font_1.woff2)format("woff2")}
+html{-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#fff;color:#333}
+a,a:link,a:visited{color:#323233;text-decoration:none}
+.res-wrap{font-size:.373rem;line-height:.533rem}
+.res-wrap .top-change{padding-top:.427rem;display:flex;align-items:center}
+.res-wrap .lang-div{flex:1;display:flex;align-items:center;font-size:.32rem}
+.res-wrap .lang-div a{display:inline-block;color:#889098;padding:.16rem .213rem;line-height:.427rem;margin-right:.053rem;text-decoration:none}
+.res-wrap .lang-div a:first-child{margin-left:.267rem}
+.res-wrap .lang-div a.current{color:#00bac7;background:#eff8f9;border-radius:.053rem}
+.res-wrap .pdf-div{width:.347rem;height:.427rem}
+.res-wrap .card{padding:0 .427rem}
+.res-wrap .res-h3{margin:.667rem 0 .533rem;text-align:center;font-size:.453rem;font-weight:700;line-height:.64rem}
+.res-wrap .img-div{display:flex;justify-content:center;padding-bottom:.267rem}
+.res-wrap .img-div img{width:2.08rem;height:2.933rem;border-radius:.053rem;cursor:pointer}
+.res-wrap .rowcard{padding-top:.333rem;padding-bottom:.333rem}
+.res-wrap .rowcard .row{display:flex;padding:.2rem 0}
+.res-wrap .rowcard .col-left{padding-right:.533rem;color:#889098;text-align:right;min-width:2.5rem}
+.res-wrap .rowcard .col-right{flex:1;width:5.867rem}
+.ch-nav{display:flex;align-items:center}
+.wap-nav-bar{position:relative;z-index:1;height:1.173rem;display:flex;align-items:center;background:#fff;border-bottom:1px solid #E8EAED}
+.wap-nav-bar .wap-nav-bar__left{padding:0 0.427rem;display:flex;align-items:center}
+.wap-nav-bar .logo{display:block;height:0.704rem}
+.wap-nav-bar__center{flex:1;height:1.173rem;display:flex;align-items:center;justify-content:flex-end}
+.wap-nav-bar .wap-nav-bar__right{padding:0 0.427rem;display:flex;align-items:center}
+.logo-text{font-size:0.373rem;color:#60656E;margin-bottom:-0.0534rem}
+.logo-text a{color:#60656E}
+.logo-dot{display:block;height:0.533rem;width:0.027rem;background:#E8EAED;margin:0 0.213rem}
+.nav-search{margin-right:0.32rem}
+.rowcard .col-right input[type=text]{border:1px solid #d4d9d7;border-radius:.11rem;padding:.16rem .24rem;outline:none;max-width:100%;box-sizing:border-box;width:100%}
+.rowcard .col-right input[type=text]:focus{border-color:#409eff;box-shadow:0 0 0 2px #409eff26}
+.text-center{text-align:center}
+.space-x-4>*+*{margin-left:16px}
+.font-small{font-size:.32rem}
+.h-4{height:1rem}
+.px-2{padding-left:.5rem;padding-right:.5rem}
+.text-xs{font-size:.32rem;line-height:1rem}
+.bg-blue-600{background-color:#409eff}
+.text-white{color:#fff}
+.rounded-lg{border-radius:.21rem}
+.hover\:bg-blue-700:hover{background-color:#3a8ee6}
+.transition-colors{transition-property:color,background-color,border-color}
+.duration-200{transition-duration:.2s}
+button{cursor:pointer;border:none;outline:none}
+.namtFamily{font-family:"Helvetica Neue",Helvetica,"PingFang SC","Microsoft YaHei","Hiragino Sans GB","WenQuanYi Micro Hei",Arial,"sans-serif",SimSun,"rare-words-font"}
+body{height:100%;font-size:12px;margin:0;background:#f5f5f5;word-wrap:break-word;max-width:750px;position:relative;margin:0 auto}
+.wap-footer{background:#282828;color:#969696;padding:.32rem;text-align:center;font-size:.32rem;line-height:.533rem}
+.wap-footer a{color:#969696;text-decoration:none}
+.upload-hint{color:#666;font-size:.28rem;margin-bottom:.2rem}
+.back-btn{position:absolute;left:.3rem;top:50%;transform:translateY(-50%);font-size:.6rem;color:#333;cursor:pointer;padding:.3rem .4rem;font-weight:bold;}
+    </style>
+</head>
+<body>
+    <div class="wap-nav-bar">
+        <span class="back-btn" onclick="location.href='index.html'">‹</span>
+        <div class="wap-nav-bar__left" style="margin-left:1rem;">
+            <span class="logo-text">编辑学籍在线验证报告</span>
+        </div>
+        <div class="wap-nav-bar__center"></div>
+        <div class="wap-nav-bar__right"></div>
+    </div>
+
+    <div class="res-wrap">
+        <div class="card">
+            <h3 class="res-h3">教育部学籍在线验证报告</h3>
+            <div class="text-center upload-hint">点击下方照片上传（自动压缩优化）<br>长按照片可删除（限2次）</div>
+            <div class="img-div">
+                <img id="userImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='293'%3E%3Crect fill='%23f0f0f0' width='208' height='293'/%3E%3Ctext fill='%23999' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3E点击上传%3C/text%3E%3C/svg%3E" style="cursor:pointer">
+                <input type="file" id="photoInput" accept="image/*" style="display:none">
+            </div>
+            <div id="compressHint" style="text-align:center;color:#67c23a;font-size:.28rem;margin-top:.2rem;display:none;">
+                ✓ 图片已压缩优化
+            </div>
+            
+            <form id="editForm">
+                <div class="rowcard">
+                    <div class="row">
+                        <div class="col-left">姓名</div>
+                        <div class="col-right namtFamily"><input type="text" name="name" value="张三"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">性别</div>
+                        <div class="col-right"><input type="text" name="gender" value="男"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">出生日期</div>
+                        <div class="col-right"><input type="text" name="birth_date" value="2000年06月08日"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">民族</div>
+                        <div class="col-right"><input type="text" name="nationality" value="汉族"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">学校名称</div>
+                        <div class="col-right"><input type="text" name="school" value="广州大学"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">层次</div>
+                        <div class="col-right"><input type="text" name="degree_level" value="本科"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">专业</div>
+                        <div class="col-right"><input type="text" name="major" value="软件工程"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">学制</div>
+                        <div class="col-right"><input type="text" name="duration" value="4 年"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">学历类别</div>
+                        <div class="col-right"><input type="text" name="education_type" value="普通高等教育"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">学习形式</div>
+                        <div class="col-right"><input type="text" name="study_type" value="普通全日制"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">分院</div>
+                        <div class="col-right"><input type="text" name="department" value="外国语学院"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">系所</div>
+                        <div class="col-right"><input type="text" name="branch" value="日语系"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">班级</div>
+                        <div class="col-right"><input type="text" name="class_name" value="日语2201班"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">学号</div>
+                        <div class="col-right"><input type="text" name="student_id" value="2022010001"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">入学日期</div>
+                        <div class="col-right"><input type="text" name="enrollment_date" value="2023年09月01日"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">学籍状态</div>
+                        <div class="col-right"><input type="text" name="status" value="在籍（注册学籍）"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">预计毕业日期</div>
+                        <div class="col-right"><input type="text" name="graduation_date" value="2027年06月30日"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-left">在线验证码</div>
+                        <div class="col-right"><input type="text" name="verify_code" value="FTHISIS9A8FAKE7PAGEK"></div>
+                    </div>
+                </div>
+                
+                <div class="text-center" style="margin-top:.5rem;margin-bottom:.5rem">
+                    <button type="button" class="font-small h-4 px-2 text-xs bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200" onclick="saveData()">
+                        保存信息
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="wap-footer">
+        主办单位：<a href="javascript:;">教育部学生服务与素质发展中心</a><br>
+        Copyright © 2003-2025 <a href="javascript:;">学信网</a> All Rights Reserved
+    </div>
+
+    <script src="js/api-helper.js"></script>
+    <script>
+        const API_BASE = window.location.origin + '/api';
+        
+        let currentUser = JSON.parse(localStorage.getItem('user'));
+        let photoBase64 = '';
+        let recordId = null;
+        let photoChanged = false; // 标记照片是否被修改
+        let longPressTimer = null; // 长按计时器
+        let hasPhoto = false; // 标记是否已有照片
+
+        if (!currentUser) {
+            alert('请先登录');
+            location.href = 'index.html';
+        }
+
+        // 加载现有数据
+        async function loadData() {
+            const res = await apiRequest(`${API_BASE}/get-report`, {
+                method: 'POST',
+                body: JSON.stringify({ userId: currentUser.id })
+            }).then(r => r.json());
+
+            if (res.success && res.data) {
+                const data = res.data;
+                recordId = data.id;
+                
+                // 填充表单
+                const form = document.getElementById('editForm');
+                for (const [key, value] of Object.entries(data)) {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input && value) {
+                        input.value = value;
+                    }
+                }
+                
+                // 显示照片
+                if (data.photo) {
+                    document.getElementById('userImg').src = data.photo;
+                    photoBase64 = data.photo;
+                    hasPhoto = true; // 标记已有照片
+                }
+            }
+        }
+
+        // 图片压缩
+        function compressImage(file, maxWidth = 800, maxHeight = 1200, quality = 0.8) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > maxWidth) {
+                            height = (maxWidth / width) * height;
+                            width = maxWidth;
+                        }
+                        if (height > maxHeight) {
+                            width = (maxHeight / height) * width;
+                            height = maxHeight;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#fff';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.onerror = () => reject(new Error('图片加载失败'));
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject(new Error('文件读取失败'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 处理照片上传
+        document.getElementById('photoInput').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                alert('请选择图片文件');
+                return;
+            }
+            
+            const userImg = document.getElementById('userImg');
+            const originalSrc = userImg.src;
+            userImg.style.opacity = '0.5';
+            
+            try {
+                photoBase64 = await compressImage(file);
+                userImg.src = photoBase64;
+                userImg.style.opacity = '1';
+                photoChanged = true; // 标记照片已修改
+                
+                const compressHint = document.getElementById('compressHint');
+                const originalSize = (file.size / 1024).toFixed(2);
+                const base64Payload = (photoBase64.split(',')[1] || '');
+                const compressedSize = (base64Payload.length * 3 / 4 / 1024).toFixed(2);
+                const compressRatio = file.size > 0
+                    ? ((1 - (compressedSize / originalSize)) * 100).toFixed(0)
+                    : '0';
+                compressHint.textContent = `✓ 图片已优化 (${originalSize}KB → ${compressedSize}KB，减少${compressRatio}%)`;
+                compressHint.style.display = 'block';
+                setTimeout(() => compressHint.style.display = 'none', 3000);
+            } catch (error) {
+                alert('图片处理失败: ' + error.message);
+                userImg.src = originalSrc;
+                userImg.style.opacity = '1';
+                document.getElementById('compressHint').style.display = 'none';
+            }
+            
+            // 清空文件选择器,避免选择同一文件无法触发
+            this.value = '';
+        });
+
+        // 保存数据
+        async function saveData() {
+            const form = document.getElementById('editForm');
+            const formData = new FormData(form);
+            const data = {};
+            
+            // 获取所有字段,包括空值
+            for (const [key, value] of formData.entries()) {
+                data[key] = value; // 允许空字符串
+            }
+            
+            // 只有在照片被修改时才发送照片数据
+            if (photoChanged && photoBase64) {
+                data.photo = photoBase64;
+            }
+
+            const res = await apiRequest(`${API_BASE}/save-report`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    userId: currentUser.id,
+                    data: data
+                })
+            }).then(r => r.json());
+
+            if (res.success) {
+                alert('保存成功！');
+                photoChanged = false; // 重置照片修改标记
+                if (photoBase64) {
+                    hasPhoto = true; // 保存成功后标记已有照片
+                }
+            } else {
+                alert(res.error || '保存失败');
+            }
+        }
+
+        // 初始化
+        loadData();
+
+        // 照片点击和长按功能
+        const userImg = document.getElementById('userImg');
+        
+        // 点击上传
+        userImg.addEventListener('click', function(e) {
+            // 只要有照片(已保存或刚上传未保存)都不能直接替换
+            if (hasPhoto || photoBase64) {
+                alert('照片已上传,如需更换请先长按删除');
+                return;
+            }
+            document.getElementById('photoInput').click();
+        });
+        
+        // 长按删除 - 触摸事件
+        userImg.addEventListener('touchstart', function(e) {
+            // 只要有照片就可以长按删除
+            if (!hasPhoto && !photoBase64) return;
+            
+            longPressTimer = setTimeout(function() {
+                if (confirm('确定要删除照片吗？删除后需要重新上传')) {
+                    deletePhoto();
+                }
+            }, 800); // 长按800毫秒触发
+        });
+        
+        userImg.addEventListener('touchend', function(e) {
+            clearTimeout(longPressTimer);
+        });
+        
+        userImg.addEventListener('touchmove', function(e) {
+            clearTimeout(longPressTimer);
+        });
+        
+        // 长按删除 - 鼠标事件(PC端)
+        userImg.addEventListener('mousedown', function(e) {
+            // 只要有照片就可以长按删除
+            if (!hasPhoto && !photoBase64) return;
+            
+            longPressTimer = setTimeout(function() {
+                if (confirm('确定要删除照片吗？删除后需要重新上传')) {
+                    deletePhoto();
+                }
+            }, 800); // 长按800毫秒触发
+        });
+        
+        userImg.addEventListener('mouseup', function(e) {
+            clearTimeout(longPressTimer);
+        });
+        
+        userImg.addEventListener('mouseleave', function(e) {
+            clearTimeout(longPressTimer);
+        });
+
+        // 删除照片
+        async function deletePhoto() {
+            // 如果照片已保存到数据库,调用后端接口删除
+            if (hasPhoto) {
+                try {
+                    const res = await apiRequest(`${API_BASE}/delete-report-photo`, {
+                        method: 'POST',
+                        body: JSON.stringify({ userId: currentUser.id })
+                    }).then(r => r.json());
+
+                    if (res.success) {
+                        alert(res.message + ` (已删除${res.delete_count}/2次)`);
+                        userImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='293'%3E%3Crect fill='%23f0f0f0' width='208' height='293'/%3E%3Ctext fill='%23999' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3E点击上传%3C/text%3E%3C/svg%3E";
+                        photoBase64 = '';
+                        photoChanged = false;
+                        hasPhoto = false; // 重置照片状态
+                    } else {
+                        alert(res.error || '删除失败');
+                    }
+                } catch (error) {
+                    alert('删除失败: ' + error.message);
+                }
+            } else {
+                // 如果照片还没保存到数据库(只是刚上传),直接清空
+                userImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='293'%3E%3Crect fill='%23f0f0f0' width='208' height='293'/%3E%3Ctext fill='%23999' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3E点击上传%3C/text%3E%3C/svg%3E";
+                photoBase64 = '';
+                photoChanged = false;
+                alert('照片已清除(未保存,不消耗删除次数)');
+            }
+        }
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html data-dpr="1" style="font-size:40px">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no,viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>学信档案</title>
+    <link rel="icon" href="img/image_1.ico" type="image/x-icon">
+    <style>
+        html{-webkit-tap-highlight-color:transparent}
+        body{margin:0;padding:0;max-width:750px;margin:0 auto;line-height:1.5;font:14px/1.5 PingFang SC,Microsoft YaHei,Helvetica Neue,Arial,sans-serif;background:#fff}
+        a,a:link,a:visited{color:#26b887;text-decoration:none}
+        .van-col{float:left;box-sizing:border-box}
+        .van-col--8{width:33.33333333%}
+        .van-row:after{content:"";display:table;clear:both}
+        .van-hairline--top-bottom:after{content:" ";position:absolute;pointer-events:none;box-sizing:border-box;top:-50%;left:-50%;right:-50%;bottom:-50%;-webkit-transform:scale(.5);transform:scale(.5);border:0 solid #ebedf0;border-width:1px 0}
+        .van-tabbar{width:100%;height:50px;display:flex;background-color:#fff}
+        .van-tabbar--fixed{left:0;bottom:0;position:fixed;max-width:750px;margin:0 auto;right:0}
+        .van-tabbar-item{flex:1;display:flex;line-height:1;font-size:12px;color:#7d7e80;align-items:center;flex-direction:column;justify-content:center}
+        .van-tabbar-item__icon{margin-bottom:.08rem}
+        .van-tabbar-item--active{color:#26b887}
+        
+        .my-container{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);word-break:break-word}
+        .my-header{position:relative;height:1.173rem;background:#26b887;text-align:center}
+        .my-header a.logo{display:inline-block;width:3.33rem;height:.7rem;margin-top:.32rem;background:url(img/image_1.png) no-repeat;background-size:100% 100%}
+        .my-header a.go-out{position:absolute;top:.24rem;right:.373rem;color:#26b887;font-size:.4rem}
+        
+        .vote-part{padding:0 .38rem}
+        
+        .menu-part{margin-bottom:1.6rem;padding:.507rem 0 .267rem;font-size:.347rem}
+        .menu-part .menu-a{color:#333;display:block;line-height:.48rem}
+        .menu-part .van-col{text-align:center;padding:.267rem 0;position:relative}
+        .menu-part .menu-img{display:inline-block;margin-bottom:.133rem;width:.8rem;height:.8rem;background-size:100%}
+        .menu-part .xjxl-img{background-image:url(img/image_2.png)}
+        .menu-part .zxyz-img{background-image:url(img/image_3.png)}
+        .menu-part .rzbg-img{background-image:url(img/image_4.png)}
+        .menu-part .gjhz-img{background-image:url(img/image_5.png)}
+        .menu-part .txjd-img{background-image:url(img/image_6.png)}
+        .menu-part .xzy-img{background-image:url(img/image_7.png)}
+        .menu-part .myd-img{background-image:url(img/image_8.png)}
+        .menu-part .cp-img{background-image:url(img/image_9.png)}
+        .menu-part .sq-img{background-image:url(img/image_10.png)}
+        
+        .vote-part{padding:0 .38rem}
+        .vote-jy-part{display:block;height:2rem;width: auto;max-width: 100%; background-size:100% 100%;background-repeat:no-repeat;border-radius:.213rem;margin:.4rem 0}
+        .vote_bg_zcsx{background-image:url(img/zcsx_bg.png)}
+        .vote_bg_zcsx2{background-image: url(img/zcsx_bg_2.png);}
+        .vote_bg_zcsx3{background-image: url(img/zcsx_bg_3.png);}
+    </style>
+</head>
+<body style="font-size:12px">
+    <div id="app" class="my-container">
+        <img src="img/image_1.jpeg" width="0" height="0" style="position:absolute;top:-100px;left:0px">
+        
+        <!-- 顶部 -->
+        <div class="my-header">
+            <a href="/" class="logo"></a>
+            <a href="javascript:;" onclick="logout()" class="go-out">
+                <svg viewBox="0 0 1024 1024" style="width:24px;height:24px;vertical-align:middle"><path d="M892.68 525.89c0.38-0.77 0.71-1.54 1.03-2.34 0.36-0.93 0.65-1.88 0.92-2.83a30.5 30.5 0 0 0 0.94-4.62c0.11-0.89 0.24-1.78 0.28-2.68 0.02-0.49 0.15-0.95 0.15-1.44 0-0.66-0.15-1.28-0.19-1.93a35.76 35.76 0 0 0-0.18-1.81c-0.13-1.02-0.24-2.04-0.47-3.03a31.5 31.5 0 0 0-1.37-4.7c-0.08-0.22-0.12-0.45-0.21-0.67a31.5 31.5 0 0 0-2.42-4.59c-0.2-0.32-0.33-0.67-0.54-0.99a31.93 31.93 0 0 0-4.04-4.95l-0.01-0.02-191.9-191.9a31.99 31.99 0 1 0-45.25 45.25l137.32 137.32H352a32 32 0 1 0 0 64h434.65L649.27 681.35a31.99 31.99 0 0 0 22.63 54.63c8.2 0 16.38-3.12 22.63-9.38l191.53-191.53 0.52-0.52c1.24-1.24 2.33-2.56 3.32-3.93 0.36-0.49 0.64-1.03 0.98-1.55 0.66-1.03 1.27-2.09 1.8-3.18z" fill="#ffffff"/><path d="M608 832H224a32.03 32.03 0 0 1-32-32V224c0-17.65 14.36-32 32-32h384a32 32 0 1 0 0-64H224c-52.94 0-96.01 43.07-96.01 96V800c0 52.93 43.07 96 96.01 96h384a32 32 0 1 0 0-64z" fill="#ffffff"/></svg>
+            </a>
+        </div>
+        
+        <!-- 广告区域 -->
+        <div class="vote-part">
+            <div id="vote_wap" style="display:block">
+                <a href="javascript:;" style="display:block" class="vote-jy-part vote_bg_zcsx"></a>
+            </div>
+             <div id="vote_wap" style="display:block">
+                <a href="javascript:;" style="display:block" class="vote-jy-part vote_bg_zcsx2"></a>
+            </div>
+             <div id="vote_wap" style="display:block">
+                <a href="javascript:;" style="display:block" class="vote-jy-part vote_bg_zcsx3"></a>
+            </div>
+        </div>
+        
+        <!-- 菜单 -->
+        <div class="menu-part">
+            <div class="van-row">
+                <div class="van-col van-col--8">
+                    <a href="view.html" class="menu-a">
+                        <span class="menu-img xjxl-img"></span><br>
+                        高等教育信息
+                    </a>
+                </div>
+                <div class="van-col van-col--8">
+                    <a href="view-report.html" class="menu-a">
+                        <span class="menu-img zxyz-img"></span><br>
+                        在线验证报告
+                    </a>
+                </div>
+                <div class="van-col van-col--8">
+                    <a href="javascript:;" class="menu-a">
+                        <span class="menu-img rzbg-img"></span><br>
+                        学历学位认证<br>与成绩验证
+                    </a>
+                </div>
+            </div>
+            <div class="van-row">
+                <div class="van-col van-col--8">
+                    <a href="javascript:;" class="menu-a">
+                        <span class="menu-img gjhz-img"></span><br>
+                        出国（境）报告发送
+                    </a>
+                </div>
+                <div class="van-col van-col--8">
+                    <a href="javascript:;" class="menu-a">
+                        <span class="menu-img txjd-img"></span><br>
+                        毕业证书图像<br>校对
+                    </a>
+                </div>
+                <div class="van-col van-col--8">
+                    <a href="javascript:;" class="menu-a">
+                        <span class="menu-img xzy-img"></span><br>
+                        就业
+                    </a>
+                </div>
+            </div>
+            <div class="van-row">
+                <div class="van-col van-col--8">
+                    <a href="javascript:;" class="menu-a">
+                        <span class="menu-img myd-img"></span><br>
+                        学校满意度
+                    </a>
+                </div>
+                <div class="van-col van-col--8">
+                    <a href="javascript:;" class="menu-a">
+                        <span class="menu-img cp-img"></span><br>
+                        个人测评
+                    </a>
+                </div>
+              <div class="van-row">
+                <div class="van-col van-col--8">
+                    <a href="javascript:;" class="menu-a">
+                        <span class="menu-img sq-img"></span><br>
+                        "双千"计划<br>"微专业"
+                    </a>
+                </div>
+                <div class="van-col van-col--8"></div>
+                <div class="van-col van-col--8"></div>
+            </div>
+        </div>
+        
+        <!-- 底部导航 -->
+        <div class="van-hairline--top-bottom van-tabbar van-tabbar--fixed" style="z-index:1000">
+            <div class="van-tabbar-item van-tabbar-item--active">
+                <div class="van-tabbar-item__icon">
+                    <svg viewBox="0 0 1024 1024" style="width:.613rem;height:.613rem;fill:currentColor"><path d="M946.5 505L534.6 93.4c-23.4-23.4-61.3-23.4-84.7 0L38.2 505c-12.2 12.2-12.2 32 0 44.2 12.2 12.2 32 12.2 44.2 0l82.2-82.2v329c0 17.7 14.3 32 32 32h673.2c17.7 0 32-14.3 32-32V467l82.2 82.2c12.2 12.2 32 12.2 44.2 0 12.2-12.2 12.2-32 0-44.2zM833.6 764H190.4V404.2L512 82.6l321.6 321.6V764z"></path></svg>
+                </div>
+                <div class="van-tabbar-item__text"><span>首页</span></div>
+            </div>
+            <div class="van-tabbar-item">
+                <div class="van-tabbar-item__icon">
+                    <img src="img/image_1.svg" style="height:0.613rem;margin:-0.04rem 0px 0.04rem">
+                </div>
+                <div class="van-tabbar-item__text"><span>学籍学历学位</span></div>
+            </div>
+            <div class="van-tabbar-item">
+                <div class="van-tabbar-item__icon">
+                    <svg viewBox="0 0 1024 1024" style="width:.613rem;height:.613rem;fill:currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path><path d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"></path></svg>
+                </div>
+                <div class="van-tabbar-item__text"><span>个人测评</span></div>
+            </div>
+            <div class="van-tabbar-item">
+                <div class="van-tabbar-item__icon">
+                    <svg viewBox="0 0 1024 1024" style="width:.613rem;height:.613rem;fill:currentColor"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-40 728H184V184h656v656z"></path><path d="M484 366h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-82 250h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm164 0h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8z"></path></svg>
+                </div>
+                <div class="van-tabbar-item__text"><span>求职招聘</span></div>
+            </div>
+            <div class="van-tabbar-item">
+                <div class="van-tabbar-item__icon">
+                    <svg viewBox="0 0 1024 1024" style="width:.613rem;height:.613rem;fill:currentColor"><path d="M858.5 763.6c-18.9-44.8-46.1-85-80.6-119.5-34.5-34.5-74.7-61.6-119.5-80.6-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1-.4.2-.8.3-1.2.5-44.8 18.9-85 46-119.5 80.6-34.5 34.5-61.6 74.7-80.6 119.5C146.9 807.5 137 854 136 901.8c-.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8 2-77.2 33-149.5 87.8-204.3 56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60c4.5 0 8.1-3.7 8-8.2-.9-47.8-10.9-94.3-29.5-138.2zM512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362c0-45.9 17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362c0 45.9-17.9 89.1-50.4 121.6S557.9 534 512 534z"></path></svg>
+                </div>
+                <div class="van-tabbar-item__text"><span>我的</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('user'));
+        if (!currentUser) {
+            location.href = 'index.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            location.href = 'login.html';
+        }
+    </script>
+</body>
+
+
+
+
+
+
+
+
+
+
+

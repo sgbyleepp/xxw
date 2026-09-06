@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>高等教育信息</title>
+    <link rel="icon" href="https://t1.chei.com.cn/archive/favicon.ico" type="image/x-icon">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f5f5f5; font-size: 15px; }
+        
+        /* 响应式容器 */
+        .app-container { width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; background: #f5f5f5; }
+        @media (min-width: 481px) {
+            body { background: #e8e8e8; }
+            .app-container { box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        }
+        
+        /* 顶部导航 */
+        .nav-bar { background: #25b887; color: #fff; height: 46px; display: flex; align-items: center; justify-content: center; position: sticky; top: 0; z-index: 100; }
+        .nav-bar .back { position: absolute; left: 8px; padding: 8px; cursor: pointer; }
+        .nav-bar .back svg { width: 24px; height: 24px; }
+        .nav-bar .title { font-size: 16px; font-weight: 500; }
+        
+        /* 横幅 */
+        .vote-part { padding: 12px 16px 0; }
+        .vote-banner { display: block; width: 100%; border-radius: 8px; overflow: hidden; }
+        .vote-banner img { width: 100%; height: auto; display: block; }
+        
+        /* 列表标题 */
+        .list-tit { display: flex; justify-content: space-between; align-items: center; padding: 16px 16px 12px; font-size: 18px; }
+        .list-tit .l { color: #333; font-weight: 500; }
+        .list-tit .r { color: #999; font-size: 14px; }
+        .list-tit .r a { color: #25b887; text-decoration: none; margin-left: 4px; }
+        
+        /* 信息卡片 */
+        .list-card { margin: 0 16px 12px; border-radius: 7px; overflow: hidden; cursor: pointer; box-shadow: 0px 4px 4px 3px rgba(98,191,207,0.2); }
+        .list-card.xj { background: linear-gradient(135deg, #1fae7f 0%, #3dcb91 100%); }
+        .list-card.xl { background: linear-gradient(135deg, #3786f3 0%, #5ca8f7 100%); }
+        .list-card.xw { background: linear-gradient(to right bottom, rgb(56, 80, 218), rgb(86, 126, 231)); }
+        .list-card.ky { background: linear-gradient(to right bottom, rgb(54, 177, 197), rgb(93, 200, 218)); }
+        
+        .list-card a { display: block; padding: 16px; color: #fff; text-decoration: none; }
+        .yxmc-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .yxmc { font-size: 21px; font-weight: 500; flex: 1; }
+        .cc { background: rgba(0,0,0,0.15); padding: 4px 12px; border-radius: 12px; font-size: 14px; margin-left: 8px; }
+        .des { font-size: 16px; opacity: 0.95; }
+        
+        /* 空状态卡片 */
+        .no-data { background: #fff; margin: 0 16px 12px; border-radius: 8px; padding: 24px 16px; text-align: center; }
+        .no-data h4 { color: #333; font-size: 17px; font-weight: normal; line-height: 2; margin-bottom: 8px; padding: 0 12px; }
+        .no-data .des { color: #666; font-size: 14px; line-height: 1.6; }
+        .help-icon { display: inline-block; width: 16px; height: 16px; vertical-align: -2px; margin-left: 0; }
+        .help-icon svg { width: 100%; height: 100%; stroke: #ccc; }
+        .colorGreen { color: #25b887; cursor: pointer; }
+        .arrow-down { display: inline-block; width: 8px; height: 8px; border-right: 1.5px solid #25b887; border-bottom: 1.5px solid #25b887; transform: rotate(45deg); margin-left: 2px; margin-bottom: 3px; }
+        .arrow-up { display: inline-block; width: 8px; height: 8px; border-right: 1.5px solid #25b887; border-bottom: 1.5px solid #25b887; transform: rotate(-135deg); margin-left: 2px; margin-top: 3px; }
+        .find-xjxl { background: #f9f9f9; margin-top: 16px; padding: 14px; border-radius: 6px; text-align: left; display: none; }
+        .find-xjxl.show { display: block; }
+        .find-list { display: flex; margin-bottom: 12px; font-size: 14px; color: #666; line-height: 1.8; }
+        .find-list:last-child { margin-bottom: 0; }
+        .find-list span { display: inline-flex; width: 20px; height: 20px; background: #25b887; color: #fff; border-radius: 50%; align-items: center; justify-content: center; font-size: 12px; margin-right: 10px; flex-shrink: 0; margin-top: 2px; }
+        .find-list div { flex: 1; }
+        .find-xjxl-bottom { text-align: center; margin-top: 16px; }
+        .find-xjxl-bottom span { color: #25b887; font-size: 15px; cursor: pointer; }
+        
+        /* 分隔线 */
+        .divider-line { height: 1px; background: #eee; margin: 16px 0; }
+        
+        /* 解决办法列表行样式 */
+        .find-list-row { display: flex; align-items: center; }
+        .find-list-content { flex: 1; }
+        .find-list-link { flex-shrink: 0; margin-left: 12px; }
+        
+        /* 信息行样式 */
+        .info-row { display: flex; align-items: center; margin-top: 12px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { flex: 1; }
+        .info-label p { font-size: 12px; color: #999; margin-bottom: 4px; }
+        .info-label h5 { font-size: 14px; color: #333; font-weight: normal; margin: 0; }
+        .info-link { flex-shrink: 0; margin-left: 12px; }
+        
+        /* 加载中 */
+        .loading { text-align: center; padding: 40px; color: #999; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="nav-bar">
+            <a class="back" onclick="history.back()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+            </a>
+            <span class="title">高等教育信息</span>
+        </div>
+        <div id="app" class="content">
+            <div class="loading">加载中...</div>
+        </div>
+    </div>
+
+    <script src="js/api-helper.js"></script>
+    <script>
+        const API_BASE = window.location.origin + '/api';
+        
+        let currentUser = null;
+        let educationData = { student_status: [], education: [], degree: [], exam: [] };
+        
+        // 辅助函数：带签名的 API 请求
+        async function apiCall(endpoint, data = {}) {
+            return apiRequest(`${API_BASE}${endpoint}`, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+        }
+        
+        const SECTION_MAP = {
+            student_status: { name: '学籍', cls: 'xj' },
+            education: { name: '学历', cls: 'xl' },
+            degree: { name: '学位', cls: 'xw' },
+            exam: { name: '考研', cls: 'ky' }
+        };
+        
+        // 检查登录
+        const savedUser = localStorage.getItem('user');
+        if (!savedUser) {
+            window.location.href = 'login.html';
+        } else {
+            currentUser = JSON.parse(savedUser);
+            loadData();
+        }
+        
+        async function loadData() {
+            try {
+                const res = await apiCall('/get-user-data', { userId: currentUser.id });
+                educationData = await res.json();
+                render();
+            } catch (e) {
+                document.getElementById('app').innerHTML = '<div class="loading">加载失败，请重试</div>';
+            }
+        }
+        
+        function render() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <div class="vote-part">
+                    <a href="javascript:;" class="vote-banner"><img src="img/kzxz_bg.png" alt=""></a>
+                </div>
+                ${renderSection('student_status')}
+                ${renderSection('education')}
+                ${renderSection('degree')}
+                ${renderSection('exam')}
+            `;
+        }
+        
+        function renderSection(key) {
+            const items = educationData[key] || [];
+            const info = SECTION_MAP[key];
+            // 考研信息不显示"尝试绑定"
+            const showBind = key !== 'exam';
+            return `
+                <div class="list-tit">
+                    <div class="l">${info.name}信息 (${items.length})</div>
+                    ${showBind ? `<div class="r">还有${info.name}没有显示出来？<span style="color:#25b887;">尝试绑定</span></div>` : ''}
+                </div>
+                ${items.length > 0 ? items.map(item => renderCard(key, item, info.cls)).join('') : renderEmptyCard(key)}
+            `;
+        }
+        
+        function renderCard(section, item, cls) {
+            let desContent = '';
+            let showTag = true;
+            if (section === 'degree') {
+                desContent = item.major || '未填写专业';
+            } else if (section === 'exam') {
+                desContent = item.year || '-';
+                showTag = false;
+            } else {
+                desContent = `${item.major || '未填写专业'}　|　${item.study_type || item.year || '-'}`;
+            }
+            return `
+                <div class="list-card ${cls}">
+                    <a href="view-detail.html?type=${section}&id=${item.id}">
+                        <div class="yxmc-wrap">
+                            <div class="yxmc">${item.school || '未填写学校'}</div>
+                            ${showTag ? `<div class="cc">${item.degree_type || item.degree_level || '-'}</div>` : ''}
+                        </div>
+                        <div class="des">${desContent}</div>
+                    </a>
+                </div>
+            `;
+        }
+        
+        function renderEmptyCard(section) {
+            if (section === 'degree') {
+                return `
+                    <div class="no-data">
+                        <h4 style="padding:0 12px;">您还未绑定学位信息，可以使用"尝试绑定学位"功能绑定您的学位 <span class="help-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg></span></h4>
+                        <div class="find-xjxl" id="degreeTips">
+                            <div class="find-list"><span>1</span><div>本系统提供社会查询的学位证书数据来源于相关学位授予单位经所在省（自治区、直辖市）学位委员会办公室报国务院学位委员会办公室备案的学位授予数据。</div></div>
+                            <div class="find-list"><span>2</span><div>请确保注册账号的"姓名"及"证件号码"无误，且对应的学位信息属于本系统查询范围，若您未成功绑定学位信息，请与有关学位授予单位的学位管理部门联系核实。</div></div>
+                            <div class="find-list"><span>3</span><div>经核实后属学位授予信息漏报、错报的，由学位授予单位依照"学位授予信息补报、修改流程"更正相关内容。本网站无权修改任何数据。</div></div>
+                        </div>
+                        <div class="find-xjxl-bottom" onclick="toggleDegreeTips()"><span id="degreeTipsText" class="colorGreen">提示信息 <i class="arrow-down"></i></span></div>
+                    </div>
+                `;
+            }
+            if (section === 'education') {
+                return `
+                    <div class="no-data">
+                        <h4>没有找到您的学历信息 <span class="help-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg></span></h4>
+                        <div class="find-xjxl-bottom"><span class="colorGreen">查看解决办法 <i class="arrow-down"></i></span></div>
+                    </div>
+                `;
+            }
+            const msgs = {
+                student_status: { title: '没有找到您的学籍信息', desc: '请确认您的姓名和证件号码是否正确' },
+                exam: { title: '您没有考研信息！', desc: '您目前没有考研信息，系统提供2006年以来入学的硕士研究生报名和成绩数据。' }
+            };
+            const m = msgs[section];
+            return `
+                <div class="no-data">
+                    <h4>${m.title}</h4>
+                    ${m.desc ? `<div class="des">${m.desc}</div>` : ''}
+                </div>
+            `;
+        }
+        
+        function toggleDegreeTips() {
+            const tips = document.getElementById('degreeTips');
+            const text = document.getElementById('degreeTipsText');
+            if (tips.classList.contains('show')) {
+                tips.classList.remove('show');
+                text.innerHTML = '提示信息 <i class="arrow-down"></i>';
+            } else {
+                tips.classList.add('show');
+                text.innerHTML = '收起 <i class="arrow-up"></i>';
+            }
+        }
+    </script>
+</body>
+</html>

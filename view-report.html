@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html data-dpr="1" style="font-size:42px">
+<head>
+    <meta charset="utf-8">
+    <title>教育部学籍在线验证报告</title>
+    <meta name="keywords" content="学籍在线验证报告,学历在线验证报告,学位在线验证报告,学历证书电子注册备案表,学历验证,学籍验证,学位验证">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <link rel="shortcut icon" href="img/image_3.ico" type="image/x-icon">
+    <style>
+html{-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,Helvetica,Segoe UI,Arial,Roboto,PingFang SC,miui,Hiragino Sans GB,Microsoft Yahei,sans-serif}
+a,a:link,a:visited{color:#323233;text-decoration:none}
+.ch-body .wap-footer{margin-top:-1.707rem!important}
+.res-wrap{font-size:.373rem;line-height:.533rem}
+.res-wrap .top-change{padding-top:.427rem;display:flex;align-items:center}
+.res-wrap .lang-div{flex:1;display:flex;align-items:center;font-size:.32rem}
+.res-wrap .lang-div a{display:inline-block;color:#889098;padding:.16rem .213rem;line-height:.427rem;margin-right:.053rem;text-decoration:none}
+.res-wrap .lang-div a:first-child{margin-left:.267rem}
+.res-wrap .lang-div a.current{color:#00bac7;background:#eff8f9;border-radius:.053rem}
+.res-wrap .pdf-div{width:.347rem;height:.427rem;background:url(img/image_4.svg) no-repeat 50%;background-size:100%}
+.res-wrap .card{padding:0 .427rem}
+.res-wrap .res-h3{margin:.667rem 0 .533rem;text-align:center;font-size:.453rem;font-weight:700;line-height:.64rem}
+.res-wrap .img-div{display:flex;justify-content:center;padding-bottom:.267rem}
+.res-wrap .img-div img{width:2.08rem;height:2.933rem;border-radius:.053rem}
+.res-wrap .rowcard{padding-top:.333rem;padding-bottom:.333rem}
+.res-wrap .rowcard .row{display:flex;padding:.2rem 0}
+.res-wrap .rowcard .col-left{width:2.667rem;padding-right:.533rem;color:#889098;text-align:right}
+.res-wrap .rowcard .col-right{flex:1;width:5.867rem}
+.ch-body{background-color:#fff}
+.ch-body .outer-wrap{min-height:100%}
+.ch-body .outer-wrap .outer-content{padding-bottom:1.707rem}
+body,html{height:100%}
+body{color:#2a3839;background:#f5f5f5;word-wrap:break-word;margin:0 auto;max-width:750px;position:relative;font-size:12px}
+a{color:#00bac7}
+.wap-footer{background:#282828;color:#969696}
+.wap-footer a{color:#969696;text-decoration:none}
+.wap-footer.wap-footer2{padding:.32rem;text-align:center;font-size:.32rem;line-height:.533rem}
+.namtFamily{font-family:"Helvetica Neue",Helvetica,"PingFang SC","Microsoft YaHei","Hiragino Sans GB","WenQuanYi Micro Hei",Arial,"sans-serif",SimSun,"rare-words-font"}
+.ch-nav{display:flex;align-items:center}
+.wap-nav-bar{position:relative;z-index:1;height:1.173rem;display:flex;align-items:center;background:#fff;border-bottom:1px solid #E8EAED}
+.wap-nav-bar .wap-nav-bar__left{padding:0 0.427rem;display:flex;align-items:center}
+.wap-nav-bar .logo{display:block;height:0.704rem}
+.wap-nav-bar__center{flex:1;height:1.173rem;display:flex;align-items:center;justify-content:flex-end}
+.wap-nav-bar .wap-nav-bar__right{padding:0 0.427rem;display:flex;align-items:center}
+.logo-text{font-size:0.373rem;color:#60656E;margin-bottom:-0.0534rem}
+.logo-text a{color:#60656E}
+.logo-dot{display:block;height:0.533rem;width:0.027rem;background:#E8EAED;margin:0 0.213rem}
+.nav-search{margin-right:0.32rem}
+.loading{text-align:center;padding:2rem;color:#999}
+    </style>
+</head>
+<body class="ch-body" style="font-size:12px">
+    <div class="outer-wrap">
+        <div id="app" class="outer-content">
+            <div class="wap-nav-bar">
+                <div class="wap-nav-bar__left">
+                    <a href="/"><img src="img/png/logo_4.png" alt="学信网" class="logo"></a>
+                    <span class="logo-dot"></span>
+                    <span class="logo-text"><a href="/">在线验证</a></span>
+                </div>
+                <div class="wap-nav-bar__center"></div>
+                <div class="wap-nav-bar__right">
+                    <span class="nav-search"><img src="img/image_2.svg" style="width:0.533rem;display:block"></span>
+                    <span class="ch-nav"><img src="img/image_3.svg" style="width:0.533rem;display:block"></span>
+                </div>
+            </div>
+            
+            <div class="res-wrap">
+                <div class="card">
+                    <div class="top-change">
+                        <div class="lang-div">报告语种 <a href="javascript:void(0)" class="current">中文</a><a href="javascript:void(0)">英文</a></div>
+                        <div title="下载PDF" class="pdf-div"></div>
+                    </div>
+                    
+                    <h3 class="res-h3">教育部学籍在线验证报告</h3>
+                    
+                    <div class="img-div"><img id="photoImg" src="" width="58" data-caption="个人头像"></div>
+                    
+                    <div class="rowcard" id="reportContent">
+                        <div class="loading">加载中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="wap-footer wap-footer2">
+        主办单位：<a href="javascript:;">教育部学生服务与素质发展中心</a><br>
+        Copyright © 2003-2026 <a href="javascript:;">学信网</a> All Rights Reserved
+    </div>
+
+    <script src="js/api-helper.js"></script>
+    <script>
+        const API_BASE = window.location.origin + '/api';
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        let userId = urlParams.get('uid');
+        if (!userId) {
+            const currentUser = JSON.parse(localStorage.getItem('user'));
+            if (currentUser) userId = currentUser.id;
+        }
+
+        // 辅助函数：带签名的 API 请求
+        async function apiCall(endpoint, data = {}) {
+            return apiRequest(`${API_BASE}${endpoint}`, {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+        }
+
+        async function loadReport() {
+            if (!userId) {
+                document.getElementById('reportContent').innerHTML = '<div style="color:#e53935;">缺少用户参数</div>';
+                return;
+            }
+            try {
+                const res = await apiCall('/get-report', { userId: userId }).then(r => r.json());
+                if (res.success && res.data) renderReport(res.data);
+                else document.getElementById('reportContent').innerHTML = '<div style="color:#e53935;">未找到报告信息</div>';
+            } catch (e) {
+                document.getElementById('reportContent').innerHTML = '<div style="color:#e53935;">加载失败</div>';
+            }
+        }
+
+        function renderReport(data) {
+            const defaultPhoto = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='208' height='293'%3E%3Crect fill='%23f0f0f0' width='208' height='293'/%3E%3Ctext fill='%23999' font-size='14' x='50%25' y='50%25' text-anchor='middle'%3E暂无照片%3C/text%3E%3C/svg%3E";
+            document.getElementById('photoImg').src = data.photo || defaultPhoto;
+            document.getElementById('reportContent').innerHTML = `
+                    <div class="row"><div class="col-left">姓名</div><div class="col-right namtFamily">${data.name || ''}</div></div>
+                    <div class="row"><div class="col-left">性别</div><div class="col-right">${data.gender || ''}</div></div>
+                    <div class="row"><div class="col-left">出生日期</div><div class="col-right">${data.birth_date || ''}</div></div>
+                    <div class="row"><div class="col-left">民族</div><div class="col-right">${data.nationality || ''}</div></div>
+                    <div class="row"><div class="col-left">学校名称</div><div class="col-right">${data.school || ''}</div></div>
+                    <div class="row"><div class="col-left">层次</div><div class="col-right">${data.degree_level || ''}</div></div>
+                    <div class="row"><div class="col-left">专业</div><div class="col-right">${data.major || ''}</div></div>
+                    <div class="row"><div class="col-left">学制</div><div class="col-right">${data.duration || ''}</div></div>
+                    <div class="row"><div class="col-left">学历类别</div><div class="col-right">${data.education_type || ''}</div></div>
+                    <div class="row"><div class="col-left">学习形式</div><div class="col-right">${data.study_type || ''}</div></div>
+                    <div class="row"><div class="col-left">分院</div><div class="col-right">${data.branch || ''}</div></div>
+                    <div class="row"><div class="col-left">系所</div><div class="col-right">${data.department || ''}</div></div>
+                    <div class="row"><div class="col-left">班级</div><div class="col-right">${data.class_name || ''}</div></div>
+                    <div class="row"><div class="col-left">学号</div><div class="col-right">${data.student_id || ''}</div></div>
+                    <div class="row"><div class="col-left">入学日期</div><div class="col-right">${data.enrollment_date || ''}</div></div>
+                    <div class="row"><div class="col-left">学籍状态</div><div class="col-right">${data.status || ''}</div></div>
+                    <div class="row"><div class="col-left">预计毕业日期</div><div class="col-right">${data.graduation_date || ''}</div></div>
+                    <div class="row"><div class="col-left">在线验证码</div><div class="col-right">${data.verify_code || ''}</div></div>
+                    <div class="row"><div class="col-left">更新日期</div><div class="col-right">${data.updated_at || ''}</div></div>`;
+        }
+        loadReport();
+    </script>
+</body>
+</html>

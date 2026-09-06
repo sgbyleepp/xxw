@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>激活码管理系统</title>
+    <style>
+        /* 样式保持原样，略... 可复制原文件样式 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px 32px; }
+        .header h1 { font-size: 24px; margin-bottom: 8px; }
+        .content { padding: 32px; }
+        .tabs { display: flex; border-bottom: 1px solid #e8e8e8; margin-bottom: 24px; }
+        .tab { padding: 12px 24px; cursor: pointer; border-bottom: 3px solid transparent; font-weight: 500; }
+        .tab.active { border-bottom-color: #667eea; color: #667eea; }
+        .card { background: #f8f9fa; border-radius: 10px; padding: 24px; margin-bottom: 24px; }
+        .card-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; }
+        .form-group input, .form-group select { width: 100%; max-width: 300px; padding: 10px 14px; border: 1px solid #ddd; border-radius: 6px; }
+        .btn { padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-secondary { background: #6c757d; margin-left: 10px; }
+        .codes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-top: 20px; }
+        .code-card { background: white; border: 1px solid #e8e8e8; border-radius: 8px; padding: 16px; position: relative; }
+        .code-card.used { background: #f8f9fa; opacity: 0.7; }
+        .code-text { font-family: monospace; font-size: 16px; font-weight: bold; margin-bottom: 8px; }
+        .code-status { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .status-valid { background: #e7f7ef; color: #2a7; }
+        .status-used { background: #f8f9fa; color: #6c757d; }
+        .status-expired { background: #fee; color: #c33; }
+        .action-buttons { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-small { padding: 6px 12px; font-size: 12px; }
+        .btn-copy { background: #28a745; }
+        .btn-delete { background: #dc3545; }
+        .message { padding: 12px; border-radius: 6px; margin-bottom: 16px; display: none; }
+        .message.success { background: #e7f7ef; color: #2a7; display: block; }
+        .message.error { background: #fee; color: #c33; display: block; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: white; border-radius: 10px; padding: 20px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .stat-value { font-size: 32px; font-weight: bold; color: #667eea; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📋 激活码管理系统</h1>
+        <p>生成和管理激活码</p>
+    </div>
+    <div class="content">
+        <div class="stats" id="stats"></div>
+        <div id="message" class="message"></div>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('generate')">生成激活码</div>
+            <div class="tab" onclick="switchTab('manage')">管理激活码</div>
+            <div class="tab" onclick="switchTab('stats')">统计信息</div>
+        </div>
+
+        <!-- 生成面板 -->
+        <div id="generatePanel" class="tab-content">
+            <div class="card">
+                <div class="card-title">生成新激活码</div>
+                <div class="form-group">
+                    <label>生成数量</label>
+                    <input type="number" id="codeCount" min="1" max="100" value="1">
+                </div>
+                <div class="form-group">
+                    <label>有效期</label>
+                   <select id="validDays">
+    <option value="1" selected>1天</option>
+    <option value="2">2天</option>
+    <option value="3">3天</option>
+    <option value="4">4天</option>
+    <option value="5">5天</option>
+    <option value="6">6天</option>
+    <option value="7">7天</option>
+    <option value="15">15天</option>
+    <option value="30">30天</option>
+    <option value="90">90天</option>
+    <option value="0">永久有效</option>
+</select>
+                </div>
+                <div class="form-group">
+                    <label>激活码前缀（可选）</label>
+                    <input type="text" id="codePrefix" placeholder="ACT" maxlength="10">
+                </div>
+                <button class="btn" onclick="generateCodes()">生成激活码</button>
+            </div>
+            <div id="generatedCodes" style="display:none;">
+                <div class="card">
+                    <div class="card-title">生成的激活码</div>
+                    <div class="codes-grid" id="codesList"></div>
+                    <div class="export-section" style="margin-top:20px;">
+                        <button class="btn" onclick="exportCodes()">导出激活码</button>
+                        <button class="btn btn-secondary" onclick="copyAllCodes()">复制全部</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 管理面板 -->
+        <div id="managePanel" class="tab-content" style="display:none;">
+            <div class="card">
+                <div class="card-title">激活码列表</div>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <select id="filterStatus" onchange="filterCodes()">
+                        <option value="all">全部状态</option>
+                        <option value="unused">未使用</option>
+                        <option value="used">已使用</option>
+                        <option value="expired">已过期</option>
+                    </select>
+                    <input type="text" id="searchCode" placeholder="搜索激活码" oninput="filterCodes()" style="flex:1;">
+                </div>
+                <div class="codes-grid" id="allCodesList"></div>
+            </div>
+        </div>
+
+        <!-- 统计面板 -->
+        <div id="statsPanel" class="tab-content" style="display:none;">
+            <div class="card">
+                <div class="card-title">激活码使用统计</div>
+                <div id="statsDetails"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = window.location.origin + '/api';
+    let allCodes = [];
+
+    function showMessage(text, type = 'success') {
+        const msg = document.getElementById('message');
+        msg.textContent = text;
+        msg.className = `message ${type}`;
+        setTimeout(() => msg.style.display = 'none', 3000);
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelector(`.tab[onclick*="${tabName}"]`).classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(p => p.style.display = 'none');
+        document.getElementById(`${tabName}Panel`).style.display = 'block';
+        if (tabName === 'manage') loadCodes();
+        if (tabName === 'stats') loadStats();
+    }
+
+    async function generateCodes() {
+        const count = parseInt(document.getElementById('codeCount').value);
+        const days = parseInt(document.getElementById('validDays').value);
+        const prefix = document.getElementById('codePrefix').value || 'ACT';
+        if (count < 1) { showMessage('请输入有效数量', 'error'); return; }
+        try {
+            const res = await fetch(`${API_BASE}/admin/generate-codes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ count, days, prefix })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showMessage(`成功生成 ${data.data.length} 个激活码`);
+                displayGeneratedCodes(data.data);
+                document.getElementById('generatedCodes').style.display = 'block';
+                loadCodes(); // 刷新管理列表
+            } else {
+                showMessage(data.error || '生成失败', 'error');
+            }
+        } catch (err) {
+            showMessage('网络错误', 'error');
+        }
+    }
+
+    function displayGeneratedCodes(codes) {
+        const container = document.getElementById('codesList');
+        if (!codes.length) { container.innerHTML = '<div>无激活码</div>'; return; }
+        container.innerHTML = codes.map(code => `
+            <div class="code-card">
+                <div class="code-text">${code.code}</div>
+                <div class="code-status status-valid">未使用</div>
+                <div class="code-info">有效期: ${code.expires_at ? new Date(code.expires_at).toLocaleString() : '永久'}<br>创建: ${new Date(code.created_at).toLocaleString()}</div>
+                <button class="btn-small btn-copy" onclick="copyToClipboard('${code.code}')">复制</button>
+            </div>
+        `).join('');
+    }
+
+    async function loadCodes() {
+        try {
+            const res = await fetch(`${API_BASE}/admin/list-codes`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+            const data = await res.json();
+            if (data.success) {
+                allCodes = data.data;
+                filterCodes();
+                updateStats(data);
+            } else {
+                showMessage('加载失败', 'error');
+            }
+        } catch (err) {
+            showMessage('网络错误', 'error');
+        }
+    }
+
+    function filterCodes() {
+        const status = document.getElementById('filterStatus').value;
+        const search = document.getElementById('searchCode').value.toLowerCase();
+        let filtered = allCodes;
+        if (status === 'unused') filtered = filtered.filter(c => !c.is_used);
+        else if (status === 'used') filtered = filtered.filter(c => c.is_used);
+        else if (status === 'expired') filtered = filtered.filter(c => c.expires_at && new Date(c.expires_at) < new Date());
+        if (search) filtered = filtered.filter(c => c.code.toLowerCase().includes(search));
+        displayAllCodes(filtered);
+    }
+
+    function displayAllCodes(codes) {
+        const container = document.getElementById('allCodesList');
+        if (!codes.length) { container.innerHTML = '<div>暂无激活码</div>'; return; }
+        container.innerHTML = codes.map(code => {
+            const now = new Date();
+            const isExpired = code.expires_at && new Date(code.expires_at) < now;
+            const status = code.is_used ? 'used' : (isExpired ? 'expired' : 'valid');
+            const statusText = code.is_used ? '已使用' : (isExpired ? '已过期' : '未使用');
+            return `
+                <div class="code-card ${status}">
+                    <div class="code-text">${code.code}</div>
+                    <div class="code-status status-${status}">${statusText}</div>
+                    <div class="code-info">有效期: ${code.expires_at ? new Date(code.expires_at).toLocaleString() : '永久'}<br>创建: ${new Date(code.created_at).toLocaleString()}</div>
+                    <div class="action-buttons">
+                        <button class="btn-small btn-copy" onclick="copyToClipboard('${code.code}')">复制</button>
+                        <button class="btn-small btn-delete" onclick="deleteCode('${code.code}')">删除</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    async function deleteCode(code) {
+        if (!confirm(`确定删除激活码 "${code}" 吗？`)) return;
+        try {
+            const res = await fetch(`${API_BASE}/admin/delete-code`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showMessage('删除成功');
+                loadCodes();
+            } else {
+                showMessage(data.error || '删除失败', 'error');
+            }
+        } catch (err) {
+            showMessage('网络错误', 'error');
+        }
+    }
+
+    function updateStats(data) {
+        const statsContainer = document.getElementById('stats');
+        statsContainer.innerHTML = `
+            <div class="stat-card"><div class="stat-value">${data.total}</div><div>总激活码</div></div>
+            <div class="stat-card"><div class="stat-value">${data.unused}</div><div>未使用</div></div>
+            <div class="stat-card"><div class="stat-value">${data.used}</div><div>已使用</div></div>
+            <div class="stat-card"><div class="stat-value">${data.expired}</div><div>已过期</div></div>
+        `;
+    }
+
+    function loadStats() {
+        const statsDetails = document.getElementById('statsDetails');
+        const used = allCodes.filter(c => c.is_used).length;
+        const total = allCodes.length;
+        const rate = total ? Math.round((used / total) * 100) : 0;
+        statsDetails.innerHTML = `
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px;">
+                <div><h4>使用率</h4><div style="font-size:32px;color:#28a745;">${rate}%</div></div>
+                <div><h4>最近7天生成</h4><div style="font-size:32px;">${allCodes.filter(c => new Date(c.created_at) > Date.now() - 7*24*3600*1000).length}</div></div>
+            </div>
+        `;
+    }
+
+    function exportCodes() {
+        const codes = Array.from(document.querySelectorAll('#codesList .code-text')).map(el => el.textContent).join('\n');
+        if (!codes) { showMessage('无可导出激活码', 'error'); return; }
+        const blob = new Blob([codes], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `激活码_${new Date().toISOString().slice(0,10)}.txt`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showMessage('导出成功');
+    }
+
+    function copyAllCodes() {
+        const codes = Array.from(document.querySelectorAll('#codesList .code-text')).map(el => el.textContent).join('\n');
+        if (!codes) { showMessage('无激活码可复制', 'error'); return; }
+        navigator.clipboard.writeText(codes).then(() => showMessage('已复制所有激活码')).catch(() => showMessage('复制失败', 'error'));
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => showMessage(`已复制: ${text}`)).catch(() => showMessage('复制失败', 'error'));
+    }
+
+    // 页面加载时自动加载管理列表
+    document.addEventListener('DOMContentLoaded', () => {
+        loadCodes();
+    });
+</script>
+</body>
+</html>
